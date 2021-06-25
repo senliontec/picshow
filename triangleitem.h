@@ -38,7 +38,6 @@ public:
     explicit TriangleItem(QGraphicsPolygonItem *parent=0);
 
 protected:
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event); // 鼠标双击事件
     void wheelEvent(QGraphicsSceneWheelEvent *event);
 };
 

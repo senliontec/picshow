@@ -36,15 +36,7 @@ TriangleItem::TriangleItem(QGraphicsPolygonItem* parent)
 }
 
 
-void TriangleItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-        this->ItemClipsChildrenToShape;
-        QList<QGraphicsItem* >childItems =  this->childItems();
-        childItems.at(0)->setSelected(true);
-    }
-}
+
 
 void TriangleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
 {
@@ -76,7 +68,7 @@ void TriangleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
 
     this->childItems().at(1)->setPos(0,-60*2/3);
     setScale(s);
-    setTransformOriginPoint(0,0);
+    setTransformOriginPoint(0,-60*2/3);
 }
 
 void TriangleItem::setZoomState(const int &zoomState)

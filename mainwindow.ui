@@ -122,6 +122,7 @@
    <addaction name="actOpenPic"/>
    <addaction name="actEdit_Delete"/>
    <addaction name="actEdit_Color"/>
+   <addaction name="actClear_Screen"/>
    <addaction name="actQuit"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
@@ -216,6 +217,15 @@
    </property>
    <property name="text">
     <string>颜色选择器</string>
+   </property>
+  </action>
+  <action name="actClear_Screen">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/images/clearScreen.png</normaloff>:/images/images/clearScreen.png</iconset>
+   </property>
+   <property name="text">
+    <string>清屏</string>
    </property>
   </action>
  </widget>

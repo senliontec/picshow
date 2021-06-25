@@ -35,6 +35,17 @@ void MainWindow::on_actOpenPic_triggered()
         if(image->load(fileName))
         {
             QGraphicsPixmapItem *pItem = new QGraphicsPixmapItem();
+            if (imageItem.isEmpty())
+            {
+                imageItem.append(pItem);
+            }
+            else {
+                delete imageItem[0];
+                imageItem.removeAt(0);
+
+                imageItem.append(pItem);
+            }
+
             QPixmap image(fileName);
             pItem->setPixmap(image);
             pItem->setZValue(0);
@@ -122,15 +133,9 @@ void MainWindow::on_actItem_Circle_triggered()
     scene->addItem(circleItem);
 }
 
-void MainWindow::on_actQuit_triggered()
-{
-
-}
-
 void MainWindow::on_actEdit_Delete_triggered()
 {
-    //删除所有选中的图元
-    qDebug() << Items.size();
+    //删除选中的图元或者按ctrl键选择多个图元同时删除
     for (int i=0; i<Items.size();i++){
         if (Items[i]->isSelected())
         {
@@ -140,10 +145,16 @@ void MainWindow::on_actEdit_Delete_triggered()
     }
 }
 
+void MainWindow::on_actClear_Screen_triggered()
+{
+    clearItems();
+}
+
+
 void MainWindow::on_actEdit_Color_triggered()
 {
     QList<QGraphicsItem *> item_list_p = ui->graphicsView->scene()->items();
-    QColorDialog colorDialog; //调出颜色选择器对话框
+    QColorDialog colorDialog;
     QColor c = colorDialog.getRgba();
     QPen pen;
     pen.setColor(c);
@@ -156,5 +167,24 @@ void MainWindow::on_actEdit_Color_triggered()
     }
 }
 
+void MainWindow::on_actQuit_triggered()
+{
+    this->close();
+}
+
+void MainWindow::clearItems()
+{
+    if (!Items.isEmpty())
+    {
+        qDeleteAll(Items);
+        Items.clear();
+    }
+
+    if (!imageItem.isEmpty())
+    {
+        delete imageItem[0];
+        imageItem.removeAt(0);
+    }
+}
 
 

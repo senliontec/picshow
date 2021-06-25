@@ -7,5 +7,6 @@
         <file>images/triangle.png</file>
         <file>images/circle.png</file>
         <file>images/color.png</file>
+        <file>images/clearScreen.png</file>
     </qresource>
 </RCC>

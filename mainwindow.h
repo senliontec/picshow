@@ -34,21 +34,32 @@ public:
 
 private:
     QList<QAbstractGraphicsShapeItem *> Items;  // 所有Item
+    QList<QGraphicsPixmapItem *> imageItem;
     static const int CircleItemId = 1;   //绘图项自定义数据的key
     static const int CircleItemDesciption = 2;   //绘图项自定义数据的key
+
     QLabel *picshow;
     QImage *image;
     QGraphicsScene  *scene;
     int frontZ=0;
     int seqNum=0;
 
+    void clearItems();
+
 private slots:
-    void on_actEdit_Delete_triggered();
-    void on_actQuit_triggered();
     void on_actOpenPic_triggered();
-    void on_actItem_Circle_triggered();
+
     void on_actItem_triangle_triggered();
+
+    void on_actItem_Circle_triggered();
+
     void on_actEdit_Color_triggered();
+
+    void on_actEdit_Delete_triggered();
+
+    void on_actClear_Screen_triggered();
+
+    void on_actQuit_triggered();
 
 private:
     Ui::MainWindow *ui;
