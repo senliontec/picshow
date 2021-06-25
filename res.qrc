@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/RECTANGL.BMP</file>
+        <file>images/132.bmp</file>
+        <file>images/128.bmp</file>
+        <file>images/108.bmp</file>
+        <file>images/triangle.png</file>
+        <file>images/circle.png</file>
+        <file>images/color.png</file>
+    </qresource>
+</RCC>
