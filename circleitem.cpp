@@ -95,10 +95,11 @@ void CircleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
         s = pow(1 / 1.1, -m_scaleValue);
     }
 
-
-//    circle_pen.setWidth(0);
-//    this->setPen(circle_pen);
-
+    double radius = boundingRect().width() / 2.0;
+    QPointF topLeft = boundingRect().topLeft();
+    m_centerPointF = QPointF(topLeft.x() + pos().x() + radius, topLeft.y() + pos().y() + radius);
+    qDebug() <<"中心点：：：" << m_centerPointF;
+    this->childItems().at(1)->setPos(m_centerPointF);
     setScale(s);
     setTransformOriginPoint(0,0);
 }
