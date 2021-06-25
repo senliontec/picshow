@@ -63,7 +63,7 @@ void MainWindow::on_actItem_triangle_triggered()
 
     QGraphicsTextItem* textItem=new QGraphicsTextItem();
     textItem->setTextWidth(120);
-    textItem->setPlainText("边长为(cm):");
+    textItem->setPlainText("边长(cm):");
     textItem->setFont(QFont("宋体",10));
     textItem->setDefaultTextColor(Qt::red); //设置字体颜色
     textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
