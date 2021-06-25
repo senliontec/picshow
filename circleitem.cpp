@@ -5,6 +5,41 @@ CircleItem::CircleItem(QGraphicsItem* parent)
     : QGraphicsEllipseItem(parent)
 {
     this->setAcceptedMouseButtons(Qt::LeftButton);
+    this->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+    QPen circlepen;
+    circlepen.setWidth(0);
+    this->setPen(circlepen);
+
+    this->setRect(-50, -50, 100, 100);
+    this->setZValue(++frontZ);
+    this->setPos(-50+(qrand() % 100),-50+(qrand() % 100));
+    this->setData(CircleItemId,++seqNum);
+    this->setData(CircleItemDesciption,"圆形");
+
+    QGraphicsTextItem* textItem=new QGraphicsTextItem();
+    textItem->setTextWidth(100);
+    textItem->setPlainText("直径(cm):");
+    textItem->setFont(QFont("宋体",10));
+    textItem->setDefaultTextColor(Qt::red); //设置字体颜色
+    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+    textItem->setParentItem(this);
+    textItem->setPos(-50,-73);
+
+    QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
+    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    pointItem->setRect(0,0,4,4);
+    pointItem->setBrush(Qt::red);
+    pointItem->setParentItem(this);
+    pointItem->setPos(0,0);
+
+    QGraphicsLineItem* lineItem=new QGraphicsLineItem();
+    lineItem->setLine(-50,0,50,0);
+    QPen pen;
+    pen.setWidth(0);
+    pen.setStyle(Qt::DotLine);
+    lineItem->setPen(pen);
+    lineItem->setParentItem(this);
 }
 
 void CircleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

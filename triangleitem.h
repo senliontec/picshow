@@ -7,10 +7,13 @@
 #include <QGraphicsPolygonItem>
 #include <QWheelEvent>
 #include <QPen>
+#include <QFont>
 
 class TriangleItem : public QGraphicsPolygonItem
 {
 private:
+    int frontZ=0;
+
     QPointF m_centerPointF;
     bool m_bResizing;
 

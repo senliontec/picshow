@@ -5,6 +5,34 @@ TriangleItem::TriangleItem(QGraphicsPolygonItem* parent)
 {
     this->setAcceptedMouseButtons(Qt::LeftButton);
     this->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+    QPen trianglepen;
+    trianglepen.setWidth(0);
+    this->setPen(trianglepen);
+
+    QPolygonF pf;
+    pf <<QPointF(0,-sqrt(10800)) << QPointF(-60, 0) << QPointF(60,0);
+    this->setPolygon(pf);
+    this->setZValue(++frontZ);
+    int x = -50+(qrand() % 100);
+    int y = -50+(qrand() % 100);
+    this->setPos(x,y);
+
+    QGraphicsTextItem* textItem=new QGraphicsTextItem();
+    textItem->setTextWidth(120);
+    textItem->setPlainText("边长(cm):");
+    textItem->setFont(QFont("宋体",10));
+    textItem->setDefaultTextColor(Qt::red); //设置字体颜色
+    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+    textItem->setParentItem(this);
+    textItem->setPos(-60,-126);
+
+    QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
+    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    pointItem->setRect(0,0,4,4);
+    pointItem->setBrush(Qt::red);
+    pointItem->setParentItem(this);
+    pointItem->setPos(0,-60*2/3);
 }
 
 

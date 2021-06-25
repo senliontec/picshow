@@ -7,9 +7,17 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPen>
 
+#include <QFont>
+
 class CircleItem : public QGraphicsEllipseItem
 {
 private:
+    int frontZ=0;
+    int seqNum=0;
+    static const int CircleItemId = 1;   //绘图项自定义数据的key
+    static const int CircleItemDesciption = 2;   //绘图项自定义数据的key
+
+
     QPointF m_centerPointF;
     bool m_bResizing;
     double factor;
