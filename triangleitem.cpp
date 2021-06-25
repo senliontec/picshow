@@ -46,6 +46,7 @@ void TriangleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
         s = pow(1 / 1.1, -m_scaleValue);     //缩小
     }
 
+    this->childItems().at(1)->setPos(0,-60*2/3);
     setScale(s);
     setTransformOriginPoint(0,0);
 }

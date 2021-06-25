@@ -71,6 +71,7 @@ void MainWindow::on_actItem_triangle_triggered()
     textItem->setPos(-60,-126);
 
     QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
+    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     pointItem->setRect(0,0,4,4);
     pointItem->setBrush(Qt::red);
     pointItem->setParentItem(triangleitem);
@@ -105,11 +106,11 @@ void MainWindow::on_actItem_Circle_triggered()
     textItem->setPos(-50,-73);
 
     QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
+    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     pointItem->setRect(0,0,4,4);
     pointItem->setBrush(Qt::red);
-    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     pointItem->setParentItem(circleItem);
-    pointItem->setPos(0,-2);
+    pointItem->setPos(0,0);
 
     QGraphicsLineItem* lineItem=new QGraphicsLineItem();
     lineItem->setLine(-50,0,50,0);
