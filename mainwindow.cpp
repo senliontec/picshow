@@ -97,7 +97,7 @@ void MainWindow::on_actItem_Circle_triggered()
 
     QGraphicsTextItem* textItem=new QGraphicsTextItem();
     textItem->setTextWidth(100);
-    textItem->setPlainText("直径为(cm):");
+    textItem->setPlainText("直径(cm):");
     textItem->setFont(QFont("宋体",10));
     textItem->setDefaultTextColor(Qt::red); //设置字体颜色
     textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
@@ -107,6 +107,7 @@ void MainWindow::on_actItem_Circle_triggered()
     QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
     pointItem->setRect(0,0,4,4);
     pointItem->setBrush(Qt::red);
+    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     pointItem->setParentItem(circleItem);
     pointItem->setPos(0,-2);
 
