@@ -47,7 +47,7 @@ void TriangleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
     }
 
     setScale(s);
-    setTransformOriginPoint(event->pos().x(), event->pos().y());
+    setTransformOriginPoint(0,0);
 }
 
 void TriangleItem::setZoomState(const int &zoomState)

@@ -100,7 +100,7 @@ void CircleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
 //    this->setPen(circle_pen);
 
     setScale(s);
-    setTransformOriginPoint(event->pos().x(), event->pos().y());
+    setTransformOriginPoint(0,0);
 }
 
 void CircleItem::setZoomState(const int &zoomState)
