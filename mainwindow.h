@@ -3,8 +3,11 @@
 
 #include "circleitem.h"
 #include "triangleitem.h"
+#include "ellipseitem.h"
 
 #include <QMainWindow>
+#include <QCheckBox>
+#include <QToolBox>
 #include <QMouseEvent>
 #include <QFileDialog>
 #include <QImage>
@@ -19,6 +22,8 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
 #include <QLineEdit>
+#include <QTableWidgetItem>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -45,6 +50,7 @@ private:
     int seqNum=0;
 
     void clearItems();
+    void initDataArea();
 
 private slots:
     void on_actOpenPic_triggered();
@@ -60,6 +66,10 @@ private slots:
     void on_actClear_Screen_triggered();
 
     void on_actQuit_triggered();
+
+    void on_actItem_Ellipse_triggered();
+
+    void on_actItem_Line_triggered();
 
 private:
     Ui::MainWindow *ui;

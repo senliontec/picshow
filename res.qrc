@@ -8,5 +8,8 @@
         <file>images/circle.png</file>
         <file>images/color.png</file>
         <file>images/clearScreen.png</file>
+        <file>images/ellipse.png</file>
+        <file>images/line.png</file>
+        <file>images/open_close.png</file>
     </qresource>
 </RCC>

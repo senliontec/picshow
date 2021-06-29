@@ -1,5 +1,4 @@
 #include "circleitem.h"
-#include <QDebug>
 
 CircleItem::CircleItem(QGraphicsItem* parent)
     : QGraphicsEllipseItem(parent)
@@ -49,9 +48,7 @@ void CircleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             double dist = sqrt(pow(m_centerPointF.x()-pos.x(), 2) + pow(m_centerPointF.y()-pos.y(), 2));
             setRect(m_centerPointF.x()-this->pos().x()-dist, m_centerPointF.y()-this->pos().y()-dist, dist*2, dist*2);
         } else if(event->modifiers() != Qt::AltModifier) {
-            qDebug() << "Custom item moved.";
             QGraphicsItem::mouseMoveEvent(event);
-            qDebug() << "moved" << pos();
         }
 }
 
@@ -61,33 +58,27 @@ void CircleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         if (event->modifiers() == Qt::ShiftModifier)
         {
-            qDebug() << "Custom item left clicked with shift key.";
             // 选中 item
             setSelected(true);
         }
         if (event->modifiers() == Qt::AltModifier) {
-            qDebug() << "Custom item left clicked with alt key.";
             // 重置 item 大小
             double radius = boundingRect().width() / 2.0;
             QPointF topLeft = boundingRect().topLeft();
             m_centerPointF = QPointF(topLeft.x() + pos().x() + radius, topLeft.y() + pos().y() + radius);
             QPointF pos = event->scenePos();
-            qDebug() << boundingRect() << radius << this->pos() << pos << event->pos();
             double dist = sqrt(pow(m_centerPointF.x()-pos.x(), 2) + pow(m_centerPointF.y()-pos.y(), 2));
             if (dist / radius > 0.8) {
-                qDebug() << dist << radius << dist / radius;
                 m_bResizing = true;
             } else {
                 m_bResizing = false;
             }
         } else {
-            qDebug() << "Custom item left clicked.";
             QGraphicsItem::mousePressEvent(event);
             event->accept();
         }
     }
     if (event->button() == Qt::RightButton) {
-        qDebug() << "删除事件";
         QGraphicsItem::mousePressEvent(event);
         event->accept();
     }
@@ -112,7 +103,6 @@ void CircleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
     }
     else
     {
-        qDebug() << scaleValue;
         scaleValue--;
     }
 

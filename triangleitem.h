@@ -11,6 +11,9 @@
 
 class TriangleItem : public QGraphicsPolygonItem
 {
+public:
+    explicit TriangleItem(QGraphicsPolygonItem *parent=0);
+
 private:
     int frontZ=0;
 
@@ -33,9 +36,6 @@ private:
 
     void setZoomState(const int &zoomState);
     void ItemRoate();
-
-public:
-    explicit TriangleItem(QGraphicsPolygonItem *parent=0);
 
 protected:
     void wheelEvent(QGraphicsSceneWheelEvent *event);

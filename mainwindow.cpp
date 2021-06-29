@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    initDataArea();
+    this->setWindowTitle("picshow");
+    this->setAttribute(Qt::WA_DeleteOnClose);
+
 
     scene=new QGraphicsScene();
     scene->setSceneRect(0,-400,900,900);
@@ -59,35 +63,6 @@ void MainWindow::on_actItem_triangle_triggered()
 {// 添加三角形
     TriangleItem* triangleitem = new TriangleItem();
     Items.append(triangleitem);
-
-//    QPen trianglepen;
-//    trianglepen.setWidth(0);
-//    triangleitem->setPen(trianglepen);
-
-//    QPolygonF pf;
-//    pf <<QPointF(0,-sqrt(10800)) << QPointF(-60, 0) << QPointF(60,0);
-//    triangleitem->setPolygon(pf);
-//    triangleitem->setZValue(++frontZ);
-//    int x = -50+(qrand() % 100);
-//    int y = -50+(qrand() % 100);
-//    triangleitem->setPos(x,y);
-
-//    QGraphicsTextItem* textItem=new QGraphicsTextItem();
-//    textItem->setTextWidth(120);
-//    textItem->setPlainText("边长(cm):");
-//    textItem->setFont(QFont("宋体",10));
-//    textItem->setDefaultTextColor(Qt::red); //设置字体颜色
-//    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-//    textItem->setParentItem(triangleitem);
-//    textItem->setPos(-60,-126);
-
-//    QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
-//    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-//    pointItem->setRect(0,0,4,4);
-//    pointItem->setBrush(Qt::red);
-//    pointItem->setParentItem(triangleitem);
-//    pointItem->setPos(0,-60*2/3);
-
     scene->addItem(triangleitem);
 }
 
@@ -95,42 +70,23 @@ void MainWindow::on_actItem_Circle_triggered()
 {// 添加圆形
     CircleItem* circleItem = new CircleItem();
     Items.append(circleItem);
-
-//    QPen circlepen;
-//    circlepen.setWidth(0);
-//    circleItem->setPen(circlepen);
-
-//    circleItem->setRect(-50, -50, 100, 100);
-//    circleItem->setZValue(++frontZ);
-//    circleItem->setPos(-50+(qrand() % 100),-50+(qrand() % 100));
-//    circleItem->setData(CircleItemId,++seqNum);
-//    circleItem->setData(CircleItemDesciption,"圆形");
-
-//    QGraphicsTextItem* textItem=new QGraphicsTextItem();
-//    textItem->setTextWidth(100);
-//    textItem->setPlainText("直径(cm):");
-//    textItem->setFont(QFont("宋体",10));
-//    textItem->setDefaultTextColor(Qt::red); //设置字体颜色
-//    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-//    textItem->setParentItem(circleItem);
-//    textItem->setPos(-50,-73);
-
-//    QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
-//    pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-//    pointItem->setRect(0,0,4,4);
-//    pointItem->setBrush(Qt::red);
-//    pointItem->setParentItem(circleItem);
-//    pointItem->setPos(0,0);
-
-//    QGraphicsLineItem* lineItem=new QGraphicsLineItem();
-//    lineItem->setLine(-50,0,50,0);
-//    QPen pen;
-//    pen.setWidth(0);
-//    pen.setStyle(Qt::DotLine);
-//    lineItem->setPen(pen);
-//    lineItem->setParentItem(circleItem);
-
     scene->addItem(circleItem);
+}
+
+void MainWindow::on_actItem_Ellipse_triggered()
+{// 添加椭圆
+    QRectF rectf = QRectF(-150,-100,300,200);
+
+    EllipseItem * ellipseItem = new EllipseItem();
+    Items.append(ellipseItem);
+    ellipseItem->m_ShapeType=CIRCLE;
+    ellipseItem->setRectSize(rectf);
+    scene->addItem(ellipseItem);
+}
+
+void MainWindow::on_actItem_Line_triggered()
+{// 添加直线
+
 }
 
 void MainWindow::on_actEdit_Delete_triggered()
@@ -153,7 +109,6 @@ void MainWindow::on_actClear_Screen_triggered()
 
 void MainWindow::on_actEdit_Color_triggered()
 {
-    QList<QGraphicsItem *> item_list_p = ui->graphicsView->scene()->items();
     QColorDialog colorDialog;
     QColor c = colorDialog.getRgba();
     QPen pen;
@@ -185,6 +140,14 @@ void MainWindow::clearItems()
         delete imageItem[0];
         imageItem.removeAt(0);
     }
+}
+
+void MainWindow::initDataArea()
+{
+    QTableWidgetItem *check=new QTableWidgetItem;
+    check->setCheckState (Qt::Checked);
+    ui->TranigletableWidget->setItem(0,0,check);
+
 }
 
 
