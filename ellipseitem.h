@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QGraphicsScene>
 #include <QGraphicsEllipseItem>
+#include <QAbstractGraphicsShapeItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QRect>
 #include <QPainter>
@@ -12,6 +13,8 @@
 #include <QList>
 #include <QTransform>
 #include <QPen>
+#include <QStyleOptionGraphicsItem>
+#include <QStyledItemDelegate>
 
 enum STATE_FLAG{
     DEFAULT_FLAG=0,
@@ -35,14 +38,12 @@ public:
     explicit EllipseItem(QGraphicsItem *parent = 0);
     ~EllipseItem();
 
+    QColor* border_c;
     SHAPE_TYPE m_ShapeType;
 
-    bool    m_bRotate;
-    qreal   m_RotateAngle;
-    QPointF m_RotateCenter;
-
-    QRectF  boundingRect() const;
     QPainterPath shape() const;
+    QRectF  boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QPainterPath getCollideShape();
     QPointF getRotatePoint(QPointF ptCenter, QPointF ptIn, qreal angle);//获取旋转后的点
     QList<QPointF> getRotatePoints(QPointF ptCenter,QList<QPointF> ptIns,qreal angle);//获取多个旋转后的点
@@ -53,8 +54,18 @@ public:
     void SetRotate(qreal RotateAngle);
 
 private:
-    int frontZ=0;
+    static int seqNum;
+    static QList<QGraphicsItem *> items;
+    static QList<QString> m_strList;
+    void updateSelectItem(int i);
 
+    int frontZ=1;
+    int EllipseItemId=1;
+    int EllipseItemDesciption=3;
+
+    bool    m_bRotate;
+    qreal   m_RotateAngle;
+    QPointF m_RotateCenter;
     QRectF  m_oldRect;
     QPolygonF m_oldRectPolygon;
     QRectF  m_RotateAreaRect;
@@ -72,16 +83,17 @@ private:
     QRectF m_SmallRotateRect;  // 矩形顶部用来表示旋转的标记的矩形
     QPolygonF m_SmallRotatePolygon;  // 矩形顶部用来表示旋转的标记的矩形旋转后形成的多边形
     QPointF m_startPos;
-    STATE_FLAG m_StateFlag;
+    STATE_FLAG stateFlag;
     QPointF *pPointFofSmallRotateRect;
 
-protected:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+protected:    
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 };
+
+
 
 #endif // ELLIPSEITEM_H
 

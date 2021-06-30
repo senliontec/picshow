@@ -2,18 +2,28 @@
 #include <QtMath>
 #include <QDebug>
 
-EllipseItem::EllipseItem(QGraphicsItem *parent):
-    m_ShapeType(RECTANGLE),
-    m_bResize(false),
-    m_oldRect(0,0,100,100),
-    m_bRotate(false),
-    m_RotateAngle(0),
-    m_StateFlag(DEFAULT_FLAG),
-    QGraphicsEllipseItem(parent)
+int EllipseItem::seqNum = 0;
+
+QList<QString> EllipseItem::m_strList = QList<QString>();
+QList<QGraphicsItem *> EllipseItem::items = QList<QGraphicsItem *>();
+
+EllipseItem::EllipseItem(QGraphicsItem *parent)
+    :m_ShapeType(RECTANGLE)
+    ,m_bResize(false)
+    ,m_oldRect(0,0,100,100)
+    ,m_bRotate(false)
+    ,m_RotateAngle(0)
+    ,stateFlag(DEFAULT_FLAG)
+    ,QGraphicsEllipseItem(parent)
 {
+
     this->setZValue(++frontZ);
     this->setPos(-50+(qrand() % 100),-50+(qrand() % 100));
-    this->setFlags(ItemIsSelectable | ItemIsMovable);
+    this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    this->setData(EllipseItemId,++seqNum);
+    this->setData(EllipseItemDesciption,"椭圆");
+
+    items.append(this);
 
     setRectSize(m_oldRect);
     setToolTip("Click and drag me!");
@@ -38,35 +48,35 @@ QRectF EllipseItem::boundingRect() const//用来控制本item绘制区域
 
 void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QPen Pen;
-    Pen= QPen(Qt::black);
-    Pen.setWidth(1);
-    painter->setPen(Pen);
+    QPen pen;
+    pen.setColor(Qt::black);
+    pen.setWidth(0);
 
     if(m_ShapeType == CIRCLE)
     {
-        QTransform trans0;
-        QPainterPath path0;
-        trans0.translate(m_RotateCenter.x(),m_RotateCenter.y());
-        trans0.rotate(m_RotateAngle,Qt::ZAxis);
-        trans0.translate(-m_RotateCenter.x(),-m_RotateCenter.y());
-        path0.addEllipse(m_oldRect);
-        path0 = trans0.map(path0);  // 将pathTemp旋转m_RotateAngle角度
-        painter->drawPath(path0);  // drawPolygon(m_oldRectPolygon);
+        pen.setStyle(Qt::SolidLine);
+        painter->setPen(pen);
+        QTransform trans;
+        QPainterPath path;
+        trans.translate(m_RotateCenter.x(),m_RotateCenter.y());
+        trans.rotate(m_RotateAngle,Qt::ZAxis);
+        trans.translate(-m_RotateCenter.x(),-m_RotateCenter.y());
+        path.addEllipse(m_oldRect);
+        path = trans.map(path);  // 将pathTemp旋转m_RotateAngle角度
+        painter->drawPath(path);  // drawPolygon(m_oldRectPolygon);
 
         //绘制旋转圆形标记
-
-        Pen.setColor(Qt::green);
-        painter->setPen(Pen);
+        pen.setColor(Qt::green);
+        painter->setPen(pen);
         QPointF pf = getSmallRotateRectCenter(m_oldRectPolygon[0],m_oldRectPolygon[1]);
         QRectF rect = QRectF(pf.x()-10,pf.y()-10,20,20);
         painter->drawEllipse(rect);  // 绘制圆形
         painter->drawPoint(pf);  // 绘制点
 
         // 绘制椭圆长轴、短轴
-        Pen.setColor(Qt::black);
-        Pen.setStyle(Qt::DotLine);
-        painter->setPen(Pen);
+        pen.setColor(Qt::black);
+        pen.setStyle(Qt::DotLine);
+        painter->setPen(pen);
         painter->drawLine((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(3).y())/2),
                          (m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2)); // 长轴
         painter->drawLine((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(1).x())/2,((m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(1).y())/2), // 短轴
@@ -136,64 +146,69 @@ void EllipseItem ::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button()== Qt::LeftButton)
     {
-        setSelected(true);
+        int item_index = this->data(1).toInt() - 1;
+        items.at(item_index)->setSelected(true);
+        updateSelectItem(item_index);
+
         m_startPos = event->pos();  // 鼠标左击时，获取当前鼠标在图片中的坐标，
         if(m_SmallRotatePolygon.containsPoint(m_startPos,Qt::WindingFill))//旋转矩形
         {
             setCursor(Qt::PointingHandCursor);
-            m_StateFlag = ROTATE;
+            stateFlag = ROTATE;
         }
         else if(m_insicedPolygon.containsPoint(m_startPos,Qt::WindingFill))  // 在矩形内框区域时按下鼠标，则可拖动图片
         {
+            setSelected(true);
             setCursor(Qt::ClosedHandCursor);  // 改变光标形状,手的形状
-            m_StateFlag = MOV_RECT;//标记当前为鼠标拖动图片移动状态
+            stateFlag = MOV_RECT;//标记当前为鼠标拖动图片移动状态
         }
         else if(m_leftPolygon.containsPoint(m_startPos,Qt::WindingFill))
         {
             setCursor(Qt::SizeHorCursor);
-            m_StateFlag = MOV_LEFT_LINE;//标记当前为用户按下矩形的左边界区域
+            stateFlag = MOV_LEFT_LINE;//标记当前为用户按下矩形的左边界区域
         }
         else if(m_rightPolygon.containsPoint(m_startPos,Qt::WindingFill))
         {
             setCursor(Qt::SizeHorCursor);
-            m_StateFlag = MOV_RIGHT_LINE;//标记当前为用户按下矩形的右边界区域
+            stateFlag = MOV_RIGHT_LINE;//标记当前为用户按下矩形的右边界区域
         }
         else if(m_topPolygon.containsPoint(m_startPos,Qt::WindingFill))
         {
             setCursor(Qt::SizeVerCursor);
-            m_StateFlag = MOV_TOP_LINE;//标记当前为用户按下矩形的上边界区域
+            stateFlag = MOV_TOP_LINE;//标记当前为用户按下矩形的上边界区域
         }
         else if(m_bottomPolygon.containsPoint(m_startPos,Qt::WindingFill))
         {
             setCursor(Qt::SizeVerCursor);
-            m_StateFlag = MOV_BOTTOM_LINE;//标记当前为用户按下矩形的下边界区域
+            stateFlag = MOV_BOTTOM_LINE;//标记当前为用户按下矩形的下边界区域
         }
         else
         {
-            m_StateFlag = DEFAULT_FLAG;
+            stateFlag = DEFAULT_FLAG;
         }
     }
     else
     {
         QGraphicsItem::mousePressEvent(event);
+        event->accept();
     }
 }
 
 void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(m_StateFlag == ROTATE)
+    if(stateFlag == ROTATE)
     {
        int nRotateAngle = atan2((event->pos().x()-m_RotateCenter.x()),(event->pos().y()-m_RotateCenter.y()))*180/M_PI;
        SetRotate(180-nRotateAngle);
     }
-    else if(m_StateFlag == MOV_RECT)
+    else if(stateFlag == MOV_RECT)
     {
         QPointF point = (event->pos() - m_startPos);
         moveBy(point.x(), point.y());
         setRectSize(m_oldRect);
         scene()->update();
     }
-    else if(m_StateFlag == MOV_LEFT_LINE)
+    else if(stateFlag == MOV_LEFT_LINE)
     {
         QPointF pf = QPointF((m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2));
         //计算到右侧边中点的距离
@@ -216,7 +231,7 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             scene()->update();//必须要用scene()->update()，不能用update();否则会出现重影
         }
     }
-    else if(m_StateFlag == MOV_TOP_LINE)
+    else if(stateFlag == MOV_TOP_LINE)
     {
         //底边中点
         QPointF pf = QPointF((m_oldRectPolygon.at(2).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(2).y()+m_oldRectPolygon.at(3).y())/2));
@@ -240,7 +255,7 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             scene()->update();//必须要用scene()->update()，不能用update();否则会出现重影
         }
     }
-    else if(m_StateFlag == MOV_RIGHT_LINE)
+    else if(stateFlag == MOV_RIGHT_LINE)
     {
         QPointF pf = QPointF((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(3).y())/2));
         //计算到左侧边中点的距离
@@ -263,7 +278,7 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             scene()->update();//必须要用scene()->update()，不能用update();否则会出现重影
         }
     }
-    else if(m_StateFlag == MOV_BOTTOM_LINE)
+    else if(stateFlag == MOV_BOTTOM_LINE)
     {
         //顶边中点
         QPointF pf = QPointF((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(1).x())/2,((m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(1).y())/2));
@@ -292,9 +307,9 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void EllipseItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     setCursor(Qt::ArrowCursor);
-    if(m_StateFlag == MOV_RECT)
+    if(stateFlag == MOV_RECT)
     {
-        m_StateFlag = DEFAULT_FLAG;
+        stateFlag = DEFAULT_FLAG;
     }
     else {
         QGraphicsItem::mouseReleaseEvent(event);
@@ -379,4 +394,16 @@ QPointF EllipseItem::getSmallRotateRectCenter(QPointF ptA,QPointF ptB)
         y = k*x+b;
     }
     return QPointF(x,y);
+}
+
+void EllipseItem::updateSelectItem(int item_index)
+{
+    for (int i;i<items.size();i++)
+    {
+        if (i==item_index){
+            continue;
+        }else {
+            items[i]->setSelected(false);
+        }
+    }
 }

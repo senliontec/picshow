@@ -56,11 +56,6 @@ void CircleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        if (event->modifiers() == Qt::ShiftModifier)
-        {
-            // 选中 item
-            setSelected(true);
-        }
         if (event->modifiers() == Qt::AltModifier) {
             // 重置 item 大小
             double radius = boundingRect().width() / 2.0;
@@ -78,20 +73,8 @@ void CircleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
             event->accept();
         }
     }
-    if (event->button() == Qt::RightButton) {
-        QGraphicsItem::mousePressEvent(event);
-        event->accept();
-    }
 }
-void CircleItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-        this->ItemClipsChildrenToShape;
-        QList<QGraphicsItem* >childItems =  this->childItems();
-        childItems.at(0)->setSelected(true);
-    }
-}
+
 void CircleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
 {
     setZoomState(NO_STATE);

@@ -23,6 +23,8 @@
 #include <QGraphicsEllipseItem>
 #include <QLineEdit>
 #include <QTableWidgetItem>
+#include <QSpinBox>
+#include <QPainter>
 
 
 QT_BEGIN_NAMESPACE
@@ -70,6 +72,8 @@ private slots:
     void on_actItem_Ellipse_triggered();
 
     void on_actItem_Line_triggered();
+
+    void setItemRotate(int i);
 
 private:
     Ui::MainWindow *ui;

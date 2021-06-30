@@ -11,5 +11,6 @@
         <file>images/ellipse.png</file>
         <file>images/line.png</file>
         <file>images/open_close.png</file>
+        <file>images/Linde_widget.png</file>
     </qresource>
 </RCC>

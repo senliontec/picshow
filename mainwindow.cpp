@@ -9,6 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     initDataArea();
+    QSpinBox * rotatebox = new QSpinBox(ui->maintoolBar);
+    rotatebox->setRange(-180,180);
+    rotatebox->setGeometry(rect().x()+1800,rect().y()+10,100,30);
+    connect(rotatebox,SIGNAL(valueChanged(int)),this,SLOT(setItemRotate(int)));
+
     this->setWindowTitle("picshow");
     this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -25,6 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete image;
+    if(scene)
+    {
+        delete scene;
+    }
     delete ui;
 }
 
@@ -62,6 +71,7 @@ void MainWindow::on_actOpenPic_triggered()
 void MainWindow::on_actItem_triangle_triggered()
 {// 添加三角形
     TriangleItem* triangleitem = new TriangleItem();
+    triangleitem->setTransformOriginPoint(0,-60*2/3);
     Items.append(triangleitem);
     scene->addItem(triangleitem);
 }
@@ -76,11 +86,11 @@ void MainWindow::on_actItem_Circle_triggered()
 void MainWindow::on_actItem_Ellipse_triggered()
 {// 添加椭圆
     QRectF rectf = QRectF(-150,-100,300,200);
-
     EllipseItem * ellipseItem = new EllipseItem();
-    Items.append(ellipseItem);
     ellipseItem->m_ShapeType=CIRCLE;
     ellipseItem->setRectSize(rectf);
+    qDebug() <<"asdfasdf" <<ellipseItem->data(1);
+    Items.append(ellipseItem);
     scene->addItem(ellipseItem);
 }
 
@@ -150,4 +160,13 @@ void MainWindow::initDataArea()
 
 }
 
-
+void MainWindow::setItemRotate(int i)
+{
+    //删除选中的图元或者按ctrl键选择多个图元同时删除
+    for (int n=0; n<Items.size();n++){
+        if (Items[n]->isSelected())
+        {
+            Items[n]->setRotation(i);
+        }
+    }
+}

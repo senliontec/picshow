@@ -96,7 +96,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>390</width>
+             <width>366</width>
              <height>387</height>
             </rect>
            </property>
@@ -129,7 +129,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>390</width>
+             <width>366</width>
              <height>387</height>
             </rect>
            </property>
@@ -158,6 +158,14 @@
            </layout>
           </widget>
           <widget class="QWidget" name="ellipse_page">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>366</width>
+             <height>387</height>
+            </rect>
+           </property>
            <attribute name="label">
             <string>椭圆</string>
            </attribute>
@@ -183,6 +191,14 @@
            </layout>
           </widget>
           <widget class="QWidget" name="line_page">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>366</width>
+             <height>387</height>
+            </rect>
+           </property>
            <attribute name="label">
             <string>直线</string>
            </attribute>
@@ -230,6 +246,12 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllToolBarAreas</set>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
@@ -244,9 +266,13 @@
    </attribute>
    <addaction name="actOpenPic"/>
    <addaction name="actEdit_Delete"/>
+   <addaction name="separator"/>
    <addaction name="actEdit_Color"/>
+   <addaction name="actLine_width"/>
+   <addaction name="separator"/>
    <addaction name="actClear_Screen"/>
    <addaction name="actQuit"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -369,6 +395,15 @@
    </property>
    <property name="text">
     <string>直线</string>
+   </property>
+  </action>
+  <action name="actLine_width">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/images/Linde_widget.png</normaloff>:/images/images/Linde_widget.png</iconset>
+   </property>
+   <property name="text">
+    <string>设置线宽</string>
    </property>
   </action>
  </widget>

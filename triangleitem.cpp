@@ -35,9 +35,6 @@ TriangleItem::TriangleItem(QGraphicsPolygonItem* parent)
     pointItem->setPos(0,-60*2/3);
 }
 
-
-
-
 void TriangleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
 {
     setZoomState(NO_STATE);
