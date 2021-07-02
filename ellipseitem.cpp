@@ -3,8 +3,6 @@
 #include <QDebug>
 
 int EllipseItem::seqNum = 0;
-
-QList<QString> EllipseItem::m_strList = QList<QString>();
 QList<QGraphicsItem *> EllipseItem::items = QList<QGraphicsItem *>();
 
 EllipseItem::EllipseItem(QGraphicsItem *parent)
@@ -14,9 +12,8 @@ EllipseItem::EllipseItem(QGraphicsItem *parent)
     ,m_bRotate(false)
     ,m_RotateAngle(0)
     ,stateFlag(DEFAULT_FLAG)
-    ,QGraphicsEllipseItem(parent)
+    ,QGraphicsEllipseItem (parent)
 {
-
     this->setZValue(++frontZ);
     this->setPos(-50+(qrand() % 100),-50+(qrand() % 100));
     this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
@@ -48,14 +45,13 @@ QRectF EllipseItem::boundingRect() const//用来控制本item绘制区域
 
 void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QPen pen;
-    pen.setColor(Qt::black);
-    pen.setWidth(0);
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
 
     if(m_ShapeType == CIRCLE)
     {
-        pen.setStyle(Qt::SolidLine);
-        painter->setPen(pen);
+        m_pen.setStyle(Qt::SolidLine);
+        painter->setPen(m_pen);
         QTransform trans;
         QPainterPath path;
         trans.translate(m_RotateCenter.x(),m_RotateCenter.y());
@@ -66,17 +62,15 @@ void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         painter->drawPath(path);  // drawPolygon(m_oldRectPolygon);
 
         //绘制旋转圆形标记
-        pen.setColor(Qt::green);
-        painter->setPen(pen);
+        painter->setPen(QPen(Qt::green));
         QPointF pf = getSmallRotateRectCenter(m_oldRectPolygon[0],m_oldRectPolygon[1]);
         QRectF rect = QRectF(pf.x()-10,pf.y()-10,20,20);
         painter->drawEllipse(rect);  // 绘制圆形
         painter->drawPoint(pf);  // 绘制点
 
         // 绘制椭圆长轴、短轴
-        pen.setColor(Qt::black);
-        pen.setStyle(Qt::DotLine);
-        painter->setPen(pen);
+        painter->setPen(QPen(Qt::black));
+        painter->setPen(QPen(Qt::DotLine));
         painter->drawLine((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(3).y())/2),
                          (m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2)); // 长轴
         painter->drawLine((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(1).x())/2,((m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(1).y())/2), // 短轴
@@ -149,6 +143,8 @@ void EllipseItem ::mousePressEvent(QGraphicsSceneMouseEvent *event)
         int item_index = this->data(1).toInt() - 1;
         items.at(item_index)->setSelected(true);
         updateSelectItem(item_index);
+
+        this->scene()->clearSelection();
 
         m_startPos = event->pos();  // 鼠标左击时，获取当前鼠标在图片中的坐标，
         if(m_SmallRotatePolygon.containsPoint(m_startPos,Qt::WindingFill))//旋转矩形

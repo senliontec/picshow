@@ -38,7 +38,11 @@ public:
     explicit EllipseItem(QGraphicsItem *parent = 0);
     ~EllipseItem();
 
-    QColor* border_c;
+    QPen m_pen;
+
+    static int seqNum;
+    static QList<QGraphicsItem *> items;
+
     SHAPE_TYPE m_ShapeType;
 
     QPainterPath shape() const;
@@ -54,11 +58,7 @@ public:
     void SetRotate(qreal RotateAngle);
 
 private:
-    static int seqNum;
-    static QList<QGraphicsItem *> items;
-    static QList<QString> m_strList;
     void updateSelectItem(int i);
-
     int frontZ=1;
     int EllipseItemId=1;
     int EllipseItemDesciption=3;

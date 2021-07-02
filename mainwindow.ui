@@ -89,7 +89,7 @@
         <item>
          <widget class="QToolBox" name="toolBox">
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="traingle_page">
            <property name="geometry">
@@ -266,10 +266,8 @@
    </attribute>
    <addaction name="actOpenPic"/>
    <addaction name="actEdit_Delete"/>
-   <addaction name="separator"/>
    <addaction name="actEdit_Color"/>
-   <addaction name="actLine_width"/>
-   <addaction name="separator"/>
+   <addaction name="actLine_Width"/>
    <addaction name="actClear_Screen"/>
    <addaction name="actQuit"/>
    <addaction name="separator"/>
@@ -397,7 +395,7 @@
     <string>直线</string>
    </property>
   </action>
-  <action name="actLine_width">
+  <action name="actLine_Width">
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/images/images/Linde_widget.png</normaloff>:/images/images/Linde_widget.png</iconset>

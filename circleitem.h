@@ -6,6 +6,7 @@
 #include <QGraphicsEllipseItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QPen>
+#include <QColor>
 
 #include <QFont>
 
@@ -18,8 +19,10 @@ private:
     int frontZ=1;
     int seqNum=0;
     static const int CircleItemId = 1;   //绘图项自定义数据的key
-    static const int CircleItemDesciption = 2;   //绘图项自定义数据的key
+    static const int CircleItemDesciption = 3;   //绘图项自定义数据的key
 
+
+    QColor c;
     QPointF m_centerPointF;
     bool m_bResizing;
     double factor;

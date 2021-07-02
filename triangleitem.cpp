@@ -5,6 +5,8 @@ TriangleItem::TriangleItem(QGraphicsPolygonItem* parent)
 {
     this->setAcceptedMouseButtons(Qt::LeftButton);
     this->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+    this->setTransformOriginPoint(0,-60*2/3);
+    this->setData(TriangleItemDesciption,"三角形");
 
     QPen trianglepen;
     trianglepen.setWidth(0);

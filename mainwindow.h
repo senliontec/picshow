@@ -21,11 +21,17 @@
 #include <QGraphicsTextItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
+#include <QGraphicsSceneMouseEvent>
 #include <QLineEdit>
 #include <QTableWidgetItem>
 #include <QSpinBox>
 #include <QPainter>
-
+#include <QMouseEvent>
+#include <QDialog>
+#include <QFormLayout>
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QInputDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -45,6 +51,10 @@ private:
     static const int CircleItemId = 1;   //绘图项自定义数据的key
     static const int CircleItemDesciption = 2;   //绘图项自定义数据的key
 
+    QInputDialog* getChNo;
+    QSpinBox* linespinbox;  // 线宽
+
+    QList<EllipseItem *>ellipse_items;
     QLabel *picshow;
     QImage *image;
     QGraphicsScene  *scene;
@@ -53,6 +63,7 @@ private:
 
     void clearItems();
     void initDataArea();
+    void setDataAreaValue(QString itemType);
 
 private slots:
     void on_actOpenPic_triggered();
@@ -73,7 +84,11 @@ private slots:
 
     void on_actItem_Line_triggered();
 
+    void on_actLine_Width_triggered();
+
     void setItemRotate(int i);
+
+    void setLineWidth(int i);
 
 private:
     Ui::MainWindow *ui;

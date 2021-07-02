@@ -16,6 +16,7 @@ public:
 
 private:
     int frontZ=0;
+    int TriangleItemDesciption=3;
 
     QPointF m_centerPointF;
     bool m_bResizing;
