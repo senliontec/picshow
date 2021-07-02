@@ -7,19 +7,34 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPen>
 #include <QColor>
+#include <QGraphicsProxyWidget>
+#include <QLineEdit>
+#include <QTableWidget>
+#include <QTableWidgetItem>
 
 #include <QFont>
 
-class CircleItem : public QGraphicsEllipseItem
+class CircleItem :  public QObject,public QGraphicsEllipseItem
 {
+    Q_OBJECT
+
 public:
     explicit CircleItem(QGraphicsItem *parent=0);
 
+
+    QGraphicsTextItem* textItem;
+    QTableWidget* parentWidget;
+    QLineEdit* edit;
+    QGraphicsProxyWidget* proxy;
+    QTableWidgetItem *title_checkBox;
+    QTableWidgetItem *rect_checkBox;
+
 private:
+    static int seqNum;
+
     int frontZ=1;
-    int seqNum=0;
-    static const int CircleItemId = 1;   //绘图项自定义数据的key
-    static const int CircleItemDesciption = 3;   //绘图项自定义数据的key
+    const int CircleItemId = 1;
+    const int CircleItemDesciption = 3;
 
 
     QColor c;
@@ -43,11 +58,15 @@ private:
     void zoomIn(); // 放大
     void zoomOut(); // 缩小
     void setZoomState(const int &zoomState); // 重置
+    void mapDataArea();
 
 protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void wheelEvent(QGraphicsSceneWheelEvent *event);
+
+private slots:
+    void titleValueChange(const QString &text);
 };
 
 #endif // CIRCLEITEM_H

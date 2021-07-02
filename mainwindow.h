@@ -4,6 +4,7 @@
 #include "circleitem.h"
 #include "triangleitem.h"
 #include "ellipseitem.h"
+#include "tabledata.h"
 
 #include <QMainWindow>
 #include <QCheckBox>
@@ -32,6 +33,7 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QInputDialog>
+#include <QRadioButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -54,6 +56,13 @@ private:
     QInputDialog* getChNo;
     QSpinBox* linespinbox;  // 线宽
 
+    tableData* triangle_table;
+    tableData* circle_table;
+    tableData* ellipse_table;
+    tableData* line_table;
+
+    QList<TriangleItem *>triangle_items;
+    QList<CircleItem *>circle_items;
     QList<EllipseItem *>ellipse_items;
     QLabel *picshow;
     QImage *image;
@@ -89,6 +98,12 @@ private slots:
     void setItemRotate(int i);
 
     void setLineWidth(int i);
+
+    void triangleCellChange(int i, int j);
+
+    void circleCellChange(int i, int j);
+
+    void ellipseCellChange(int i, int j);
 
 private:
     Ui::MainWindow *ui;

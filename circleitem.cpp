@@ -1,4 +1,6 @@
 #include "circleitem.h"
+#include <QDebug>
+int CircleItem::seqNum = 0;
 
 CircleItem::CircleItem(QGraphicsItem* parent)
     : QGraphicsEllipseItem(parent)
@@ -16,14 +18,12 @@ CircleItem::CircleItem(QGraphicsItem* parent)
     this->setData(CircleItemId,++seqNum);
     this->setData(CircleItemDesciption,"圆形");
 
-    QGraphicsTextItem* textItem=new QGraphicsTextItem();
-    textItem->setTextWidth(100);
-    textItem->setPlainText("直径(cm):");
-    textItem->setFont(QFont("宋体",10));
-    textItem->setDefaultTextColor(Qt::red); //设置字体颜色
-    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-    textItem->setParentItem(this);
-    textItem->setPos(-50,-73);
+    proxy = new QGraphicsProxyWidget();
+    edit = new QLineEdit("直径(cm):");
+    edit->setFixedWidth(100);
+    proxy->setWidget(edit);
+    proxy->setPos(-50,-70);
+    proxy->setParentItem(this);
 
     QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
     pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
@@ -39,6 +39,8 @@ CircleItem::CircleItem(QGraphicsItem* parent)
     pen.setStyle(Qt::DotLine);
     lineItem->setPen(pen);
     lineItem->setParentItem(this);
+
+    connect(edit,SIGNAL(textChanged(const QString)),this,SLOT(titleValueChange(const QString)));
 }
 
 void CircleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -56,6 +58,7 @@ void CircleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
+        mapDataArea();
         if (event->modifiers() == Qt::AltModifier) {
             // 重置 item 大小
             double radius = boundingRect().width() / 2.0;
@@ -117,4 +120,18 @@ void CircleItem::setZoomState(const int &zoomState)
         setScale(1);
         setTransformOriginPoint(0, 0);
     }
+}
+
+void CircleItem::titleValueChange(const QString &text)
+{
+    int item_index=this->data(1).toInt()-1;
+    QTableWidgetItem* item =new QTableWidgetItem();
+    item->setText(text);
+    parentWidget->setItem(item_index,2,item);
+}
+
+void CircleItem::mapDataArea()
+{
+    int item_index = this->data(1).toInt()-1;
+    parentWidget->selectRow(item_index);
 }

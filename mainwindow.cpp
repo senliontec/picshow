@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    triangle_table = new tableData();
+    circle_table = new tableData();
+    ellipse_table = new tableData();
+    line_table = new tableData();
     initDataArea();
 
     QSpinBox * rotatebox = new QSpinBox(ui->maintoolBar);
@@ -28,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     getChNo=new QInputDialog(this);
     connect(getChNo,SIGNAL(intValueSelected(int)),this,SLOT(setLineWidth(int)));
+    connect(triangle_table, SIGNAL(cellChanged(int,int)), this, SLOT(triangleCellChange(int, int)));
+    connect(circle_table, SIGNAL(cellChanged(int,int)), this, SLOT(circleCellChange(int, int)));
+    connect(ellipse_table, SIGNAL(cellChanged(int,int)), this, SLOT(ellipseCellChange(int, int)));
 }
 
 MainWindow::~MainWindow()
@@ -74,26 +81,73 @@ void MainWindow::on_actOpenPic_triggered()
 void MainWindow::on_actItem_triangle_triggered()
 {// 添加三角形
     TriangleItem* triangleitem = new TriangleItem();
+    triangleitem->parentWidget = triangle_table;
     Items.append(triangleitem);
+    triangle_items.append(triangleitem);
+
+    int item_index = triangleitem->data(1).toInt()-1;
+    QTableWidgetItem *title_checkBox = new QTableWidgetItem();
+    QTableWidgetItem *rect_checkBox = new QTableWidgetItem();
+    title_checkBox->setCheckState(Qt::Unchecked);
+    rect_checkBox->setCheckState(Qt::Unchecked);
+    triangle_table->setItem(item_index, 0, rect_checkBox);
+    triangle_table->setItem(item_index, 1, title_checkBox);
+
     scene->addItem(triangleitem);
 }
 
 void MainWindow::on_actItem_Circle_triggered()
 {// 添加圆形
-    CircleItem* circleItem = new CircleItem();
-    Items.append(circleItem);
-    scene->addItem(circleItem);
+
+    CircleItem* circleitem = new CircleItem();
+    circleitem->parentWidget = circle_table;
+    Items.append(circleitem);
+    circle_items.append(circleitem);
+
+    int item_index = circleitem->data(1).toInt()-1;
+    circleitem->title_checkBox = new QTableWidgetItem();
+    circleitem->rect_checkBox = new QTableWidgetItem();
+    circleitem->title_checkBox->setCheckState(Qt::Unchecked);
+    circleitem->rect_checkBox->setCheckState(Qt::Unchecked);
+    circle_table->setItem(item_index, 0, circleitem->rect_checkBox);
+    circle_table->setItem(item_index, 1, circleitem->title_checkBox);
+
+    scene->addItem(circleitem);
 }
 
 void MainWindow::on_actItem_Ellipse_triggered()
 {// 添加椭圆
     QRectF rectf = QRectF(-150,-100,300,200);
-    EllipseItem * ellipseItem = new EllipseItem();
-    ellipseItem->m_ShapeType=CIRCLE;
-    ellipseItem->setRectSize(rectf);
-    ellipse_items.append(ellipseItem);
-    Items.append(ellipseItem);
-    scene->addItem(ellipseItem);
+    EllipseItem * ellipseitem = new EllipseItem();
+    ellipseitem->parentWidget = ellipse_table;
+    ellipseitem->m_ShapeType=CIRCLE;
+    ellipseitem->setRectSize(rectf);
+    ellipse_items.append(ellipseitem);
+
+    ellipseitem->long_proxy = new QGraphicsProxyWidget();
+    ellipseitem->short_proxy = new QGraphicsProxyWidget();
+    ellipseitem->long_axios_edit->setFixedWidth(100);
+    ellipseitem->short_axios_edit->setFixedWidth(100);
+    ellipseitem->long_proxy->setWidget(ellipseitem->long_axios_edit);
+    ellipseitem->short_proxy->setWidget(ellipseitem->short_axios_edit);
+    ellipseitem->long_proxy->setPos(150,0);
+    ellipseitem->short_proxy->setPos(0,100);
+    ellipseitem->long_proxy->setParentItem(ellipseitem);
+    ellipseitem->short_proxy->setParentItem(ellipseitem);
+
+    int item_index = ellipseitem->data(1).toInt()-1;
+    QTableWidgetItem *long_title_checkBox = new QTableWidgetItem();
+    QTableWidgetItem *short_title_checkBox = new QTableWidgetItem();
+    QTableWidgetItem *rect_checkBox = new QTableWidgetItem();
+    long_title_checkBox->setCheckState(Qt::Unchecked);
+    short_title_checkBox->setCheckState(Qt::Unchecked);
+    rect_checkBox->setCheckState(Qt::Unchecked);
+    ellipse_table->setItem(item_index, 0, rect_checkBox);
+    ellipse_table->setItem(item_index, 1, long_title_checkBox);
+    ellipse_table->setItem(item_index, 2, short_title_checkBox);
+
+    Items.append(ellipseitem);
+    scene->addItem(ellipseitem);
 }
 
 void MainWindow::on_actItem_Line_triggered()
@@ -138,6 +192,8 @@ void MainWindow::on_actEdit_Color_triggered()
     pen.setColor(c);
     pen.setWidth(0);
 
+    qDebug() << Items;
+
     for (int i=0; i<Items.size();i++){
         if (Items[i]->isSelected())
         {
@@ -176,26 +232,24 @@ void MainWindow::clearItems()
 void MainWindow::initDataArea()
 {
     QStringList triangle_header,circle_header,ellipse_header;
-    triangle_header <<"框(隐藏/展示)"<<"标题(隐藏/展示)"<<"边长";
-    circle_header <<"框(隐藏/展示)"<<"标题(隐藏/展示)"<<"边长";
-    ellipse_header <<"框(隐藏/展示)"<<"标题(隐藏/展示)"<<"边长" ;
-    QTableWidgetItem    *headerItem;
-    ui->TranigletableWidget->setColumnCount(triangle_header.count());//列数设置为与 headerText的行数相等
-    ui->TranigletableWidget->setRowCount(10);
-    for (int i=0;i<ui->TranigletableWidget->columnCount();i++)//列编号从0开始
-    {
-       headerItem=new QTableWidgetItem(triangle_header.at(i)); //新建一个QTableWidgetItem， headerText.at(i)获取headerText的i行字符串
-       QFont font=headerItem->font();//获取原有字体设置
-       font.setPointSize(12);//字体大小
-       headerItem->setTextColor(Qt::black);//字体颜色
-       headerItem->setFont(font);//设置字体
-       ui->TranigletableWidget->setHorizontalHeaderItem(i,headerItem); //设置表头单元格的Item
-    }
-    ui->TranigletableWidget->setColumnWidth(0,130);
-    ui->TranigletableWidget->setColumnWidth(1,130);
-    QTableWidgetItem* item = new QTableWidgetItem(tr("asdf"));
-    ui->TranigletableWidget->setItem(1,1,item);
-//    ui->TranigletableWidget->setItemDelegateForColumn(colScore,&spinDelegate);//设置自定义代理组件
+    triangle_header << QStringLiteral("框选择") << QStringLiteral("标题选择") << QStringLiteral("边长");
+    circle_header << QStringLiteral("框选择") << QStringLiteral("标题选择") << QStringLiteral("边长");
+    ellipse_header << QStringLiteral("框选择") << QStringLiteral("长轴标题选择") << QStringLiteral("短轴标题选择") << QStringLiteral("长轴") << QStringLiteral("短轴");
+    triangle_table->setColumnCount(3);
+    triangle_table->setRowCount(1000);
+    circle_table->setColumnCount(3);
+    circle_table->setRowCount(1000);
+    ellipse_table->setColumnCount(5);
+    ellipse_table->setRowCount(1000);
+    triangle_table->setTableHeader(triangle_header);
+    circle_table->setTableHeader(circle_header);
+    ellipse_table->setTableHeader(ellipse_header);
+
+    ui->triangle_h_layout->addWidget(triangle_table);
+    ui->circle_h_layout->addWidget(circle_table);
+    ui->ellipse_h_layout->addWidget(ellipse_table);
+    ui->line_h_layout->addWidget(line_table);
+
 }
 
 void MainWindow::setItemRotate(int i)
@@ -232,6 +286,99 @@ void MainWindow::setLineWidth(int linewidth)
             }
             pen.setColor(Items[i]->pen().color());
             Items[i]->setPen(pen);
+        }
+    }
+}
+
+void MainWindow:: triangleCellChange(int i,int j)
+{
+    qDebug() << "三角形" << i << j;
+    if (triangle_table->item(i,j)->checkState() == Qt::Checked)
+    {
+        if(j == 0){
+            triangle_items[i]->hide();
+            triangle_table->item(i,j)->setText("展示");
+        }
+        if(j == 1){
+
+            triangle_items[i]->edit->hide();
+            triangle_table->item(i,j)->setText("展示");
+        }
+
+    }
+    if (triangle_table->item(i,j)->checkState() == Qt::Unchecked)
+    {
+        if(j == 0){
+            triangle_items[i]->show();
+            triangle_table->item(i,j)->setText("隐藏");
+        }
+        if(j == 1){
+            triangle_items[i]->edit->show();
+            triangle_table->item(i,j)->setText("隐藏");
+        }
+    }
+}
+
+void MainWindow:: circleCellChange(int i, int j)
+{
+    if (circle_table->item(i,j)->checkState() == Qt::Checked)
+    {
+        if(j == 0){
+            circle_items[i]->hide();
+            circle_table->item(i,j)->setText("展示");
+        }
+        if(j == 1){
+
+            circle_items[i]->edit->hide();
+            circle_table->item(i,j)->setText("展示");
+        }
+
+    }
+    if (circle_table->item(i,j)->checkState() == Qt::Unchecked)
+    {
+        if(j == 0){
+            circle_items[i]->show();
+            circle_table->item(i,j)->setText("隐藏");
+        }
+        if(j == 1){
+            circle_items[i]->edit->show();
+            circle_table->item(i,j)->setText("隐藏");
+        }
+    }
+}
+
+void MainWindow:: ellipseCellChange(int i, int j)
+{
+    qDebug() << "椭圆" << i << j;
+    if (ellipse_table->item(i,j)->checkState() == Qt::Checked)
+    {
+        if(j == 0){
+            ellipse_items[i]->hide();
+            ellipse_table->item(i,j)->setText("展示");
+        }
+        if(j == 1){
+            ellipse_items[i]->long_axios_edit->hide();
+            ellipse_table->item(i,j)->setText("展示");
+        }
+        if(j == 2){
+            ellipse_items[i]->short_axios_edit->hide();
+            ellipse_table->item(i,j)->setText("展示");
+        }
+
+    }
+    if (ellipse_table->item(i,j)->checkState() == Qt::Unchecked)
+    {
+        if(j == 0){
+            ellipse_items[i]->show();
+            ellipse_table->item(i,j)->setText("隐藏");
+        }
+        if(j == 1){
+            ellipse_items[i]->long_axios_edit->show();
+            ellipse_table->item(i,j)->setText("隐藏");
+        }
+        if(j == 2){
+            ellipse_items[i]->short_axios_edit->show();
+            ellipse_table->item(i,j)->setText("隐藏");
         }
     }
 }

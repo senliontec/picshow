@@ -89,7 +89,7 @@
         <item>
          <widget class="QToolBox" name="toolBox">
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="traingle_page">
            <property name="geometry">
@@ -103,7 +103,7 @@
            <attribute name="label">
             <string>三角形</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="triangle_h_layout">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -119,9 +119,6 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item>
-             <widget class="QTableWidget" name="TranigletableWidget"/>
-            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="circle_page">
@@ -136,7 +133,7 @@
            <attribute name="label">
             <string>圆形</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout">
+           <layout class="QHBoxLayout" name="circle_h_layout">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -152,9 +149,6 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item>
-             <widget class="QTableWidget" name="CircletableWidget"/>
-            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="ellipse_page">
@@ -169,7 +163,7 @@
            <attribute name="label">
             <string>椭圆</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <layout class="QHBoxLayout" name="ellipse_h_layout">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -185,9 +179,6 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item>
-             <widget class="QTableWidget" name="EllipsetableWidget"/>
-            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="line_page">
@@ -202,7 +193,7 @@
            <attribute name="label">
             <string>直线</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <layout class="QHBoxLayout" name="line_h_layout">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -218,9 +209,6 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item>
-             <widget class="QTableWidget" name="LinetableWidget"/>
-            </item>
            </layout>
           </widget>
          </widget>

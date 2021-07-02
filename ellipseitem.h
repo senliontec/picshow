@@ -15,6 +15,9 @@
 #include <QPen>
 #include <QStyleOptionGraphicsItem>
 #include <QStyledItemDelegate>
+#include <QTableWidgetItem>
+#include <QLineEdit>
+#include <QGraphicsProxyWidget>
 
 enum STATE_FLAG{
     DEFAULT_FLAG=0,
@@ -33,6 +36,7 @@ enum SHAPE_TYPE{
 
 class EllipseItem : public QObject ,public QGraphicsEllipseItem
 {
+    Q_OBJECT
 
 public:
     explicit EllipseItem(QGraphicsItem *parent = 0);
@@ -42,6 +46,12 @@ public:
 
     static int seqNum;
     static QList<QGraphicsItem *> items;
+
+    QTableWidget* parentWidget;
+    QGraphicsProxyWidget *long_proxy;
+    QGraphicsProxyWidget* short_proxy;
+    QLineEdit* long_axios_edit=nullptr;
+    QLineEdit* short_axios_edit=nullptr;
 
     SHAPE_TYPE m_ShapeType;
 
@@ -59,9 +69,10 @@ public:
 
 private:
     void updateSelectItem(int i);
+
     int frontZ=1;
-    int EllipseItemId=1;
-    int EllipseItemDesciption=3;
+    const int EllipseItemId=1;
+    const int EllipseItemDesciption=3;
 
     bool    m_bRotate;
     qreal   m_RotateAngle;
@@ -86,15 +97,19 @@ private:
     STATE_FLAG stateFlag;
     QPointF *pPointFofSmallRotateRect;
 
+    void mapDataArea();
+
+
 protected:    
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+private slots:
+    void  longAxiostitleValueChange(const QString &text);
+    void  shortAxiostitleValueChange(const QString &text);
+
 };
-
-
-
 #endif // ELLIPSEITEM_H
 
 

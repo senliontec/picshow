@@ -27,6 +27,12 @@ EllipseItem::EllipseItem(QGraphicsItem *parent)
     setCursor(Qt::ArrowCursor);
     pPointFofSmallRotateRect = new QPointF[4];
     SetRotate(0);
+
+    this->long_axios_edit = new QLineEdit("长轴(cm):");
+    this->short_axios_edit = new QLineEdit("短轴(cm):");
+
+    connect(long_axios_edit,SIGNAL(textChanged(const QString)),this,SLOT(longAxiostitleValueChange(const QString)));
+    connect(short_axios_edit,SIGNAL(textChanged(const QString)),this,SLOT(shortAxiostitleValueChange(const QString)));
 }
 
 EllipseItem::~EllipseItem()
@@ -140,11 +146,15 @@ void EllipseItem ::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button()== Qt::LeftButton)
     {
+
+        mapDataArea();
+
         int item_index = this->data(1).toInt() - 1;
         items.at(item_index)->setSelected(true);
         updateSelectItem(item_index);
 
         this->scene()->clearSelection();
+
 
         m_startPos = event->pos();  // 鼠标左击时，获取当前鼠标在图片中的坐标，
         if(m_SmallRotatePolygon.containsPoint(m_startPos,Qt::WindingFill))//旋转矩形
@@ -196,6 +206,12 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     {
        int nRotateAngle = atan2((event->pos().x()-m_RotateCenter.x()),(event->pos().y()-m_RotateCenter.y()))*180/M_PI;
        SetRotate(180-nRotateAngle);
+
+       short_proxy->setPos((m_oldRectPolygon.at(2).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(2).y()+m_oldRectPolygon.at(3).y())/2));
+       long_proxy->setPos((m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2));
+       long_proxy->setRotation(180-nRotateAngle);
+       short_proxy->setRotation(180-nRotateAngle);
+
     }
     else if(stateFlag == MOV_RECT)
     {
@@ -224,6 +240,10 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             m_RotateCenter=QPointF((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(2).x())/2,(m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(2).y())/2);
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
+
+            short_proxy->setPos((m_oldRectPolygon.at(2).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(2).y()+m_oldRectPolygon.at(3).y())/2));
+            long_proxy->setPos((m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2));
+
             scene()->update();//必须要用scene()->update()，不能用update();否则会出现重影
         }
     }
@@ -248,6 +268,10 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             m_RotateCenter=QPointF((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(2).x())/2,(m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(2).y())/2);
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
+
+            short_proxy->setPos((m_oldRectPolygon.at(2).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(2).y()+m_oldRectPolygon.at(3).y())/2));
+            long_proxy->setPos((m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2));
+
             scene()->update();//必须要用scene()->update()，不能用update();否则会出现重影
         }
     }
@@ -271,8 +295,13 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             m_RotateCenter=QPointF((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(2).x())/2,(m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(2).y())/2);
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
+
+            short_proxy->setPos((m_oldRectPolygon.at(2).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(2).y()+m_oldRectPolygon.at(3).y())/2));
+            long_proxy->setPos((m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2));
+
             scene()->update();//必须要用scene()->update()，不能用update();否则会出现重影
         }
+
     }
     else if(stateFlag == MOV_BOTTOM_LINE)
     {
@@ -295,6 +324,10 @@ void EllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             m_RotateCenter=QPointF((m_oldRectPolygon.at(0).x()+m_oldRectPolygon.at(2).x())/2,(m_oldRectPolygon.at(0).y()+m_oldRectPolygon.at(2).y())/2);
             m_oldRect.moveCenter(m_RotateCenter);
             setRectSize(m_oldRect);
+
+            short_proxy->setPos((m_oldRectPolygon.at(2).x()+m_oldRectPolygon.at(3).x())/2,((m_oldRectPolygon.at(2).y()+m_oldRectPolygon.at(3).y())/2));
+            long_proxy->setPos((m_oldRectPolygon.at(1).x()+m_oldRectPolygon.at(2).x())/2,((m_oldRectPolygon.at(1).y()+m_oldRectPolygon.at(2).y())/2));
+
             scene()->update();//必须要用scene()->update()，不能用update();否则会出现重影
         }
     }
@@ -402,4 +435,26 @@ void EllipseItem::updateSelectItem(int item_index)
             items[i]->setSelected(false);
         }
     }
+}
+
+void EllipseItem::longAxiostitleValueChange(const QString &text)
+{
+    int item_index=this->data(1).toInt()-1;
+    QTableWidgetItem* item =new QTableWidgetItem();
+    item->setText(text);
+    parentWidget->setItem(item_index,3,item);
+}
+
+void EllipseItem::shortAxiostitleValueChange(const QString &text)
+{
+    int item_index=this->data(1).toInt()-1;
+    QTableWidgetItem* item =new QTableWidgetItem();
+    item->setText(text);
+    parentWidget->setItem(item_index,4,item);
+}
+
+void EllipseItem::mapDataArea()
+{
+    int item_index = this->data(1).toInt()-1;
+    parentWidget->selectRow(item_index);
 }

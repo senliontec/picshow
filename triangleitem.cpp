@@ -1,11 +1,14 @@
 #include "triangleitem.h"
 
+int TriangleItem::seqNum = 0;
+
 TriangleItem::TriangleItem(QGraphicsPolygonItem* parent)
     : QGraphicsPolygonItem(parent)
 {
     this->setAcceptedMouseButtons(Qt::LeftButton);
     this->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
     this->setTransformOriginPoint(0,-60*2/3);
+    this->setData(TriangleItemId,++seqNum);
     this->setData(TriangleItemDesciption,"三角形");
 
     QPen trianglepen;
@@ -20,14 +23,13 @@ TriangleItem::TriangleItem(QGraphicsPolygonItem* parent)
     int y = -50+(qrand() % 100);
     this->setPos(x,y);
 
-    QGraphicsTextItem* textItem=new QGraphicsTextItem();
-    textItem->setTextWidth(120);
-    textItem->setPlainText("边长(cm):");
-    textItem->setFont(QFont("宋体",10));
-    textItem->setDefaultTextColor(Qt::red); //设置字体颜色
-    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-    textItem->setParentItem(this);
-    textItem->setPos(-60,-126);
+    proxy = new QGraphicsProxyWidget();
+    edit = new QLineEdit("边长(cm):");
+    edit->setFixedWidth(121);
+    proxy->setWidget(edit);
+    proxy->setPos(-60,-124);
+    proxy->setParentItem(this);
+
 
     QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
     pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
@@ -35,6 +37,13 @@ TriangleItem::TriangleItem(QGraphicsPolygonItem* parent)
     pointItem->setBrush(Qt::red);
     pointItem->setParentItem(this);
     pointItem->setPos(0,-60*2/3);
+
+    connect(edit,SIGNAL(textChanged(const QString)),this,SLOT(titleValueChange(const QString)));
+}
+
+void TriangleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    mapDataArea();
 }
 
 void TriangleItem::wheelEvent(QGraphicsSceneWheelEvent *event)
@@ -81,7 +90,16 @@ void TriangleItem::setZoomState(const int &zoomState)
     }
 }
 
-void TriangleItem::ItemRoate()
+void TriangleItem::titleValueChange(const QString &text)
 {
+    int item_index=this->data(1).toInt()-1;
+    QTableWidgetItem* item =new QTableWidgetItem();
+    item->setText(text);
+    parentWidget->setItem(item_index,2,item);
+}
 
+void TriangleItem::mapDataArea()
+{
+    int item_index = this->data(1).toInt()-1;
+    parentWidget->selectRow(item_index);
 }

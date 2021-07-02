@@ -5,18 +5,32 @@
 #include <QGraphicsSceneWheelEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPolygonItem>
+#include <QGraphicsProxyWidget>
+#include <QTableWidgetItem>
 #include <QWheelEvent>
 #include <QPen>
 #include <QFont>
+#include <QLineEdit>
+#include <QTableWidget>
 
-class TriangleItem : public QGraphicsPolygonItem
+class TriangleItem :public QObject,public QGraphicsPolygonItem
 {
+    Q_OBJECT
+
 public:
     explicit TriangleItem(QGraphicsPolygonItem *parent=0);
 
+    QTableWidget* parentWidget;
+    QGraphicsTextItem* textItem;
+    QLineEdit* edit;
+    QGraphicsProxyWidget* proxy;
+
 private:
+    static int seqNum;
+
     int frontZ=0;
-    int TriangleItemDesciption=3;
+    const int TriangleItemId = 1;
+    const int TriangleItemDesciption=3;
 
     QPointF m_centerPointF;
     bool m_bResizing;
@@ -36,10 +50,14 @@ private:
     };
 
     void setZoomState(const int &zoomState);
-    void ItemRoate();
+    void mapDataArea();
 
 protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void wheelEvent(QGraphicsSceneWheelEvent *event);
+
+private slots:
+    void titleValueChange(const QString &text);
 };
 
 #endif // TRIANGLEITEM_H
