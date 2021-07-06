@@ -31,10 +31,7 @@
 #include <QDialog>
 #include <QFormLayout>
 #include <QVBoxLayout>
-#include <QDialogButtonBox>
 #include <QInputDialog>
-#include <QRadioButton>
-#include <QGraphicsItemGroup>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -69,7 +66,6 @@ private:
 
     void clearItems();
     void initDataUi();
-    void setDataAreaValue(QString itemType);
 
 private slots:
     void on_actOpenPic_triggered();

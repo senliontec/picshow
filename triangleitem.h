@@ -1,24 +1,26 @@
 #ifndef TRIANGLEITEM_H
 #define TRIANGLEITEM_H
-#include <QWidget>
-#include <QMouseEvent>
-#include <QGraphicsScene>
-#include <QGraphicsEllipseItem>
+
+#include "baseitem.h"
+
 #include <QAbstractGraphicsShapeItem>
+#include <QLineEdit>
+#include <QList>
+#include <QMouseEvent>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsPolygonItem>
+#include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QRect>
 #include <QPainter>
-#include <QPolygon>
-#include <QList>
-#include <QTransform>
 #include <QPen>
+#include <QPolygon>
 #include <QStyleOptionGraphicsItem>
 #include <QStyledItemDelegate>
 #include <QTableWidgetItem>
-#include <QLineEdit>
-#include <QGraphicsProxyWidget>
-#include <QGraphicsPolygonItem>
 #include <QWheelEvent>
+#include <QWidget>
 
 namespace
 {
@@ -37,19 +39,17 @@ namespace
     };
 }
 
-
 enum SHAPETYPE {
     TRIANGLE
 };
 
-class TriangleItem : public QObject, public QGraphicsPolygonItem
+class TriangleItem : public BaseItem, public QGraphicsPolygonItem
 {
     Q_OBJECT
 
 public:
     explicit TriangleItem(QGraphicsItem *parent = 0);
     ~TriangleItem();
-
 
     QPen triangle_pen;
     SHAPETYPE ShapeType;

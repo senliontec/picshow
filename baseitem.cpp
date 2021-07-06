@@ -1,8 +1,5 @@
 #include "baseitem.h"
 
-
-
-BaseItem::BaseItem()
-
+BaseItem::BaseItem(QObject* parent)
 {
 }

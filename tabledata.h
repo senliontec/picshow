@@ -12,9 +12,6 @@ public:
     ~tableData();
 
     void setTableHeader(QStringList header);
-
-private:
-
 };
 
 #endif // TABLEDATA_H

@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     scene->setSceneRect(0, -400, 900, 900);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);  // 抗锯齿
-    this->image = new QImage();
-    this->showMaximized();
+    image = new QImage();
+    showMaximized();
     getChNo = new QInputDialog(this);
     connect(getChNo, SIGNAL(intValueSelected(int)), this, SLOT(setLineWidth(int)));
     connect(triangle_table, SIGNAL(cellChanged(int, int)), this, SLOT(triangleCellChange(int, int)));
@@ -78,13 +78,14 @@ void MainWindow::on_actItem_triangle_triggered()
     triangleitem->proxy->setWidget(triangleitem->edit);
     triangleitem->proxy->setPos(-60, sqrt(10800) - sqrt(10800) * (sqrt(3) / 3));
     triangleitem->proxy->setParentItem(triangleitem);
-    int item_index = triangleitem->data(1).toInt() - 1;
+    int rowcount = triangle_table->rowCount();
+    triangle_table->insertRow(rowcount);
     QTableWidgetItem *title_checkBox = new QTableWidgetItem();
     QTableWidgetItem *rect_checkBox = new QTableWidgetItem();
     title_checkBox->setCheckState(Qt::Unchecked);
     rect_checkBox->setCheckState(Qt::Unchecked);
-    triangle_table->setItem(item_index, 0, rect_checkBox);
-    triangle_table->setItem(item_index, 1, title_checkBox);
+    triangle_table->setItem(rowcount, 0, rect_checkBox);
+    triangle_table->setItem(rowcount, 1, title_checkBox);
     Items.append(triangleitem);
     scene->addItem(triangleitem);
 }
@@ -96,13 +97,14 @@ void MainWindow::on_actItem_Circle_triggered()
     circleitem->parentWidget = circle_table;
     Items.append(circleitem);
     circle_items.append(circleitem);
-    int item_index = circleitem->data(1).toInt() - 1;
+    int rowcount = circle_table->rowCount();
+    circle_table->insertRow(rowcount);
     QTableWidgetItem* title_checkBox = new QTableWidgetItem();
     QTableWidgetItem* rect_checkBox = new QTableWidgetItem();
     title_checkBox->setCheckState(Qt::Unchecked);
     rect_checkBox->setCheckState(Qt::Unchecked);
-    circle_table->setItem(item_index, 0, rect_checkBox);
-    circle_table->setItem(item_index, 1, title_checkBox);
+    circle_table->setItem(rowcount, 0, rect_checkBox);
+    circle_table->setItem(rowcount, 1, title_checkBox);
     scene->addItem(circleitem);
 }
 
@@ -249,12 +251,6 @@ void MainWindow::setItemRotate(int i)
         if (Items[n]->isSelected()) {
             Items[n]->setRotation(i);
         }
-    }
-}
-
-void MainWindow::setDataAreaValue(QString itemType)
-{
-    if (itemType == QString("椭圆")) {
     }
 }
 

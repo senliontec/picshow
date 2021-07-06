@@ -1,13 +1,12 @@
 #ifndef BASEITEM_H
 #define BASEITEM_H
 
-#include <QAbstractGraphicsShapeItem>
 #include <QObject>
 
-class BaseItem: public QObject, public QAbstractGraphicsShapeItem
+class BaseItem: public QObject
 {
 public:
-    BaseItem();
+    explicit BaseItem(QObject* parent = 0);
 };
 
 #endif // BASEITEM_H
