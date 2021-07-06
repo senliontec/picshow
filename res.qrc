@@ -12,5 +12,6 @@
         <file>images/line.png</file>
         <file>images/open_close.png</file>
         <file>images/Linde_widget.png</file>
+        <file>images/reset.png</file>
     </qresource>
 </RCC>

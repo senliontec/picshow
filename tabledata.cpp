@@ -1,14 +1,12 @@
 #include "tabledata.h"
 
 tableData::tableData()
-    :QTableWidget()
+    : QTableWidget()
 {
-
 }
 
 tableData::~tableData()
 {
-
 }
 
 void tableData::setTableHeader(QStringList header)

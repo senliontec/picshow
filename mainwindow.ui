@@ -96,7 +96,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>366</width>
+             <width>157</width>
              <height>387</height>
             </rect>
            </property>
@@ -126,7 +126,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>366</width>
+             <width>157</width>
              <height>387</height>
             </rect>
            </property>
@@ -156,7 +156,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>366</width>
+             <width>157</width>
              <height>387</height>
             </rect>
            </property>
@@ -186,7 +186,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>366</width>
+             <width>157</width>
              <height>387</height>
             </rect>
            </property>
@@ -256,6 +256,7 @@
    <addaction name="actEdit_Delete"/>
    <addaction name="actEdit_Color"/>
    <addaction name="actLine_Width"/>
+   <addaction name="actReset_Item"/>
    <addaction name="actClear_Screen"/>
    <addaction name="actQuit"/>
    <addaction name="separator"/>
@@ -390,6 +391,15 @@
    </property>
    <property name="text">
     <string>设置线宽</string>
+   </property>
+  </action>
+  <action name="actReset_Item">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/images/reset.png</normaloff>:/images/images/reset.png</iconset>
+   </property>
+   <property name="text">
+    <string>重置</string>
    </property>
   </action>
  </widget>

@@ -11,16 +11,16 @@
 #include <QLineEdit>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QGraphicsScene>
 
 #include <QFont>
 
-class CircleItem :  public QObject,public QGraphicsEllipseItem
+class CircleItem :  public QObject, public QGraphicsEllipseItem
 {
     Q_OBJECT
 
 public:
-    explicit CircleItem(QGraphicsItem *parent=0);
-
+    explicit CircleItem(QGraphicsItem *parent = 0);
 
     QGraphicsTextItem* textItem;
     QTableWidget* parentWidget;
@@ -32,7 +32,7 @@ public:
 private:
     static int seqNum;
 
-    int frontZ=1;
+    int frontZ = 1;
     const int CircleItemId = 1;
     const int CircleItemDesciption = 3;
 
@@ -43,21 +43,18 @@ private:
     double factor;
     qreal m_scaleValue;
     int m_zoomState;
-    enum Enum_ZoomState{
+    enum Enum_ZoomState {
         NO_STATE,
         RESET,
         ZOOM_IN,
         ZOOM_OUT
     };
-    enum Enum_ZoomTimes{
+    enum Enum_ZoomTimes {
         ZOOM_IN_TIMES = 1000,
         ZOOM_OUT_TIMES = -10,
     };
 
-    void zoom(); // 缩放
-    void zoomIn(); // 放大
-    void zoomOut(); // 缩小
-    void setZoomState(const int &zoomState); // 重置
+    void setZoomState(const int &zoomState);
     void mapDataArea();
 
 protected:

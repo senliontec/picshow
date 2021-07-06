@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include "circleitem.h"
-#include "triangleitem.h"
 #include "ellipseitem.h"
+#include "triangleitem.h"
 #include "tabledata.h"
 
 #include <QMainWindow>
@@ -34,9 +34,13 @@
 #include <QDialogButtonBox>
 #include <QInputDialog>
 #include <QRadioButton>
+#include <QGraphicsItemGroup>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+    class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -48,30 +52,23 @@ public:
     ~MainWindow();
 
 private:
-    QList<QAbstractGraphicsShapeItem *> Items;  // 所有Item
-    QList<QGraphicsPixmapItem *> imageItem;
-    static const int CircleItemId = 1;   //绘图项自定义数据的key
-    static const int CircleItemDesciption = 2;   //绘图项自定义数据的key
-
-    QInputDialog* getChNo;
-    QSpinBox* linespinbox;  // 线宽
-
     tableData* triangle_table;
     tableData* circle_table;
     tableData* ellipse_table;
     tableData* line_table;
-
+    QGraphicsScene  *scene;
+    QImage *image;
+    QInputDialog* getChNo;
+    QList<QAbstractGraphicsShapeItem *> Items;
+    QList<QGraphicsPixmapItem *> imageItem;
     QList<TriangleItem *>triangle_items;
     QList<CircleItem *>circle_items;
     QList<EllipseItem *>ellipse_items;
     QLabel *picshow;
-    QImage *image;
-    QGraphicsScene  *scene;
-    int frontZ=0;
-    int seqNum=0;
+    QSpinBox* linespinbox;
 
     void clearItems();
-    void initDataArea();
+    void initDataUi();
     void setDataAreaValue(QString itemType);
 
 private slots:
@@ -86,6 +83,8 @@ private slots:
     void on_actEdit_Delete_triggered();
 
     void on_actClear_Screen_triggered();
+
+    void on_actReset_Item_triggered();
 
     void on_actQuit_triggered();
 
