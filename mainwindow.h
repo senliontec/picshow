@@ -4,6 +4,7 @@
 #include "circleitem.h"
 #include "ellipseitem.h"
 #include "triangleitem.h"
+#include "lineitem.h"
 #include "tabledata.h"
 
 #include <QCheckBox>
@@ -61,6 +62,7 @@ private:
     QList<TriangleItem *>triangle_items;
     QList<CircleItem *>circle_items;
     QList<EllipseItem *>ellipse_items;
+    QList<LineItem *> line_items;
     QLabel *picshow;
     QSpinBox* linespinbox;
 
@@ -100,6 +102,8 @@ private slots:
     void circleCellChange(int i, int j);
 
     void ellipseCellChange(int i, int j);
+
+    void toolBoxClickedChange(int index);
 
 private:
     Ui::MainWindow *ui;

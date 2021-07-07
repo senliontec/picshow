@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -26,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(triangle_table, SIGNAL(cellChanged(int, int)), this, SLOT(triangleCellChange(int, int)));
     connect(circle_table, SIGNAL(cellChanged(int, int)), this, SLOT(circleCellChange(int, int)));
     connect(ellipse_table, SIGNAL(cellChanged(int, int)), this, SLOT(ellipseCellChange(int, int)));
+    connect(ui->toolBox, SIGNAL(currentChanged(int)), this, SLOT(toolBoxClickedChange(int)));
 }
 
 MainWindow::~MainWindow()
@@ -68,7 +68,6 @@ void MainWindow::on_actItem_triangle_triggered()
     // 添加三角形
     QRectF rectf = QRectF(-60, -sqrt(10800) * (sqrt(3) / 3), 120, sqrt(10800));
     TriangleItem * triangleitem = new TriangleItem();
-    qDebug() << "sssssssssssssssss" << triangleitem->seqNum;
     triangleitem->triangle_pen.setWidth(0);
     triangleitem->parentWidget = triangle_table;
     triangleitem->ShapeType = TRIANGLE;
@@ -80,11 +79,8 @@ void MainWindow::on_actItem_triangle_triggered()
     triangleitem->proxy->setPos(-60, sqrt(10800) - sqrt(10800) * (sqrt(3) / 3));
     triangleitem->proxy->setParentItem(triangleitem);
     int rowcount = triangle_table->rowCount();
-    qDebug() << rowcount;
     triangle_table->insertRow(rowcount);
     int rowcounts = triangle_table->rowCount();
-    qDebug() << "ddddddddddd" << rowcounts;
-    qDebug() << "当前行" << triangle_table->currentRow();
     QTableWidgetItem *title_checkBox = new QTableWidgetItem();
     QTableWidgetItem *rect_checkBox = new QTableWidgetItem();
     title_checkBox->setCheckState(Qt::Unchecked);
@@ -150,7 +146,8 @@ void MainWindow::on_actItem_Ellipse_triggered()
 
 void MainWindow::on_actItem_Line_triggered()
 {
-    // 添加直线
+    LineItem* lineitem = new LineItem();
+    scene->addItem(lineitem);
 }
 
 void MainWindow::on_actEdit_Delete_triggered()
@@ -159,7 +156,6 @@ void MainWindow::on_actEdit_Delete_triggered()
     for (int i = 0; i < Items.size(); i++) {
         if (Items[i]->isSelected()) {
             int item_index = Items[i]->data(1).toInt();
-            qDebug() << "item_idnex" << item_index;
             if (Items[i]->data(3) == QString("椭圆")) {
                 ellipse_items.removeAt(item_index);
                 ellipse_table->removeRow(item_index);
@@ -184,7 +180,6 @@ void MainWindow::on_actLine_Width_triggered()
     linewidth_dialog->setOkButtonText(QString("确定"));
     linewidth_dialog->setCancelButtonText(QString("取消"));
     linewidth_dialog->setInputMode(QInputDialog::IntInput);
-//    linewidth_dialog->setIntRange();
     linewidth_dialog->setLabelText("设置线宽");
     linewidth_dialog->show();
 }
@@ -201,7 +196,6 @@ void MainWindow::on_actEdit_Color_triggered()
     QPen pen;
     pen.setColor(c);
     pen.setWidth(0);
-    qDebug() << Items;
     for (int i = 0; i < Items.size(); i++) {
         if (Items[i]->isSelected()) {
             if (Items[i]->data(3) == QString("椭圆")) {
@@ -222,6 +216,9 @@ void MainWindow::on_actEdit_Color_triggered()
 
 void MainWindow::on_actReset_Item_triggered()
 {
+    LineItem* lineitem = new LineItem();
+    line_items.append(lineitem);
+    scene->addItem(lineitem);
 }
 
 void MainWindow::on_actQuit_triggered()
@@ -231,6 +228,17 @@ void MainWindow::on_actQuit_triggered()
 
 void MainWindow::initDataUi()
 {
+    // tolbox
+    QIcon down_triangle_icon(":/images/images/down_arrow.png");
+    QIcon up_triangle_icon(":/images/images/up_arrow.png");
+    QIcon down_ellipse_icon(":/images/images/down_arrow.png");
+    QIcon up_ellipse_icon(":/images/images/up_arrow.png");
+    QIcon down_circle_icon(":/images/images/down_arrow.png");
+    QIcon up_circle_icon(":/images/images/up_arrow.png");
+    ui->toolBox->setItemIcon(0, up_triangle_icon);
+    ui->toolBox->setItemIcon(1, down_ellipse_icon);
+    ui->toolBox->setItemIcon(2, down_circle_icon);
+    // tablewidget
     triangle_table = new tableData();
     circle_table = new tableData();
     ellipse_table = new tableData();
@@ -254,13 +262,13 @@ void MainWindow::initDataUi()
 void MainWindow::clearItems()
 {
     if (!triangle_items.isEmpty()) {
-        triangle_items.last()->seqNum = 0;
+        TriangleItem::seqNum = 0;
     }
     if (!ellipse_items.isEmpty()) {
-        ellipse_items.last()->seqNum = 0;
+        EllipseItem::seqNum = 0;
     }
     if (!circle_items.isEmpty()) {
-        circle_items.last()->seqNum = 0;
+        CircleItem::seqNum = 0;
     }
     for(int row = triangle_table->rowCount() - 1; row >= 0; row--) {
         triangle_table->removeRow(row);
@@ -291,30 +299,30 @@ void MainWindow::updateItemIndex(QString item_name)
             triangle_items[i]->setData(1, i);
         }
         if (!triangle_items.isEmpty()) {
-            triangle_items.last()->seqNum = triangle_items.last()->seqNum - 1;
+            TriangleItem::seqNum = TriangleItem::seqNum - 1;
         }
         if (triangle_items.size() == 1) {
-            triangle_items.last()->seqNum = 0;
+            TriangleItem::seqNum = 0;
         }
     } else if (item_name == QString("椭圆")) {
         for (int i = 0; i < ellipse_items.size(); i++) {
             ellipse_items[i]->setData(1, i);
         }
         if (!ellipse_items.isEmpty()) {
-            ellipse_items.last()->seqNum = ellipse_items.last()->seqNum - 1;
+            EllipseItem::seqNum = EllipseItem::seqNum - 1;
         }
         if (ellipse_items.size() == 1) {
-            ellipse_items.last()->seqNum = 0;
+            EllipseItem::seqNum = 0;
         }
     } else if (item_name == QString("圆形")) {
         for (int i = 0; i < circle_items.size(); i++) {
             circle_items[i]->setData(1, i);
         }
         if (!circle_items.isEmpty()) {
-            circle_items.last()->seqNum = circle_items.last()->seqNum - 1;
+            CircleItem::seqNum = CircleItem::seqNum - 1;
         }
         if (circle_items.size() == 1) {
-            circle_items.last()->seqNum = 0;
+            CircleItem::seqNum = 0;
         }
     }
 }
@@ -346,6 +354,19 @@ void MainWindow::setLineWidth(int linewidth)
             }
             pen.setColor(Items[i]->pen().color());
             Items[i]->setPen(pen);
+        }
+    }
+}
+
+void MainWindow::toolBoxClickedChange(int index)
+{
+    QIcon down_icon(":/images/images/down_arrow.png");
+    QIcon up_icon(":/images/images/up_arrow.png");
+    for (int i = 0; i < 3; i++) {
+        if (i == index) {
+            ui->toolBox->setItemIcon(index, up_icon);
+        } else {
+            ui->toolBox->setItemIcon(i, down_icon);
         }
     }
 }

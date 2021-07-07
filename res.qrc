@@ -13,5 +13,7 @@
         <file>images/open_close.png</file>
         <file>images/Linde_widget.png</file>
         <file>images/reset.png</file>
+        <file>images/down_arrow.png</file>
+        <file>images/up_arrow.png</file>
     </qresource>
 </RCC>
