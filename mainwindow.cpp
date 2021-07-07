@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);  // 抗锯齿
     image = new QImage();
     showMaximized();
-    getChNo = new QInputDialog(this);
-    connect(getChNo, SIGNAL(intValueSelected(int)), this, SLOT(setLineWidth(int)));
+    linewidth_dialog = new QInputDialog(this);
+    connect(linewidth_dialog, SIGNAL(intValueChanged(int)), this, SLOT(setLineWidth(int)));
     connect(triangle_table, SIGNAL(cellChanged(int, int)), this, SLOT(triangleCellChange(int, int)));
     connect(circle_table, SIGNAL(cellChanged(int, int)), this, SLOT(circleCellChange(int, int)));
     connect(ellipse_table, SIGNAL(cellChanged(int, int)), this, SLOT(ellipseCellChange(int, int)));
@@ -68,6 +68,7 @@ void MainWindow::on_actItem_triangle_triggered()
     // 添加三角形
     QRectF rectf = QRectF(-60, -sqrt(10800) * (sqrt(3) / 3), 120, sqrt(10800));
     TriangleItem * triangleitem = new TriangleItem();
+    qDebug() << "sssssssssssssssss" << triangleitem->seqNum;
     triangleitem->triangle_pen.setWidth(0);
     triangleitem->parentWidget = triangle_table;
     triangleitem->ShapeType = TRIANGLE;
@@ -79,7 +80,11 @@ void MainWindow::on_actItem_triangle_triggered()
     triangleitem->proxy->setPos(-60, sqrt(10800) - sqrt(10800) * (sqrt(3) / 3));
     triangleitem->proxy->setParentItem(triangleitem);
     int rowcount = triangle_table->rowCount();
+    qDebug() << rowcount;
     triangle_table->insertRow(rowcount);
+    int rowcounts = triangle_table->rowCount();
+    qDebug() << "ddddddddddd" << rowcounts;
+    qDebug() << "当前行" << triangle_table->currentRow();
     QTableWidgetItem *title_checkBox = new QTableWidgetItem();
     QTableWidgetItem *rect_checkBox = new QTableWidgetItem();
     title_checkBox->setCheckState(Qt::Unchecked);
@@ -153,6 +158,21 @@ void MainWindow::on_actEdit_Delete_triggered()
     //删除选中的图元或者按ctrl键选择多个图元同时删除
     for (int i = 0; i < Items.size(); i++) {
         if (Items[i]->isSelected()) {
+            int item_index = Items[i]->data(1).toInt();
+            qDebug() << "item_idnex" << item_index;
+            if (Items[i]->data(3) == QString("椭圆")) {
+                ellipse_items.removeAt(item_index);
+                ellipse_table->removeRow(item_index);
+            }
+            if (Items[i]->data(3) == QString("三角形")) {
+                triangle_items.removeAt(item_index);
+                triangle_table->removeRow(item_index);
+            }
+            if (Items[i]->data(3) == QString("圆形")) {
+                circle_items.removeAt(item_index);
+                circle_table->removeRow(item_index);
+            }
+            updateItemIndex(Items[i]->data(3).toString());
             delete Items[i];
             Items.removeAt(i);
         }
@@ -161,19 +181,18 @@ void MainWindow::on_actEdit_Delete_triggered()
 
 void MainWindow::on_actLine_Width_triggered()
 {
-    getChNo->setOkButtonText(QString("确定"));
-    getChNo->setCancelButtonText(QString("取消"));
-    getChNo->setInputMode(QInputDialog::IntInput);
-//    getChNo->setIntRange();
-    getChNo->setLabelText("Select a channel");
-    getChNo->show();
+    linewidth_dialog->setOkButtonText(QString("确定"));
+    linewidth_dialog->setCancelButtonText(QString("取消"));
+    linewidth_dialog->setInputMode(QInputDialog::IntInput);
+//    linewidth_dialog->setIntRange();
+    linewidth_dialog->setLabelText("设置线宽");
+    linewidth_dialog->show();
 }
 
 void MainWindow::on_actClear_Screen_triggered()
 {
     clearItems();
 }
-
 
 void MainWindow::on_actEdit_Color_triggered()
 {
@@ -186,12 +205,12 @@ void MainWindow::on_actEdit_Color_triggered()
     for (int i = 0; i < Items.size(); i++) {
         if (Items[i]->isSelected()) {
             if (Items[i]->data(3) == QString("椭圆")) {
-                int item_index = Items[i]->data(1).toInt() - 1;
+                int item_index = Items[i]->data(1).toInt();
                 ellipse_items[item_index]->ellipse_pen.setColor(c);
                 ellipse_items[item_index]->update();
             }
             if (Items[i]->data(3) == QString("三角形")) {
-                int item_index = Items[i]->data(1).toInt() - 1;
+                int item_index = Items[i]->data(1).toInt();
                 triangle_items[item_index]->triangle_pen.setColor(c);
                 triangle_items[item_index]->update();
             }
@@ -208,18 +227,6 @@ void MainWindow::on_actReset_Item_triggered()
 void MainWindow::on_actQuit_triggered()
 {
     this->close();
-}
-
-void MainWindow::clearItems()
-{
-    if (!Items.isEmpty()) {
-        qDeleteAll(Items);
-        Items.clear();
-    }
-    if (!imageItem.isEmpty()) {
-        delete imageItem[0];
-        imageItem.removeAt(0);
-    }
 }
 
 void MainWindow::initDataUi()
@@ -244,9 +251,76 @@ void MainWindow::initDataUi()
     ui->line_h_layout->addWidget(line_table);
 }
 
+void MainWindow::clearItems()
+{
+    if (!triangle_items.isEmpty()) {
+        triangle_items.last()->seqNum = 0;
+    }
+    if (!ellipse_items.isEmpty()) {
+        ellipse_items.last()->seqNum = 0;
+    }
+    if (!circle_items.isEmpty()) {
+        circle_items.last()->seqNum = 0;
+    }
+    for(int row = triangle_table->rowCount() - 1; row >= 0; row--) {
+        triangle_table->removeRow(row);
+    }
+    for(int row = ellipse_table->rowCount() - 1; row >= 0; row--) {
+        ellipse_table->removeRow(row);
+    }
+    for(int row = circle_table->rowCount() - 1; row >= 0; row--) {
+        circle_table->removeRow(row);
+    }
+    if (!Items.isEmpty()) {
+        qDeleteAll(Items);
+        Items.clear();
+    }
+    if (!imageItem.isEmpty()) {
+        delete imageItem[0];
+        imageItem.removeAt(0);
+    }
+    triangle_items.clear();
+    ellipse_items.clear();
+    circle_items.clear();
+}
+
+void MainWindow::updateItemIndex(QString item_name)
+{
+    if (item_name == QString("三角形")) {
+        for (int i = 0; i < triangle_items.size(); i++) {
+            triangle_items[i]->setData(1, i);
+        }
+        if (!triangle_items.isEmpty()) {
+            triangle_items.last()->seqNum = triangle_items.last()->seqNum - 1;
+        }
+        if (triangle_items.size() == 1) {
+            triangle_items.last()->seqNum = 0;
+        }
+    } else if (item_name == QString("椭圆")) {
+        for (int i = 0; i < ellipse_items.size(); i++) {
+            ellipse_items[i]->setData(1, i);
+        }
+        if (!ellipse_items.isEmpty()) {
+            ellipse_items.last()->seqNum = ellipse_items.last()->seqNum - 1;
+        }
+        if (ellipse_items.size() == 1) {
+            ellipse_items.last()->seqNum = 0;
+        }
+    } else if (item_name == QString("圆形")) {
+        for (int i = 0; i < circle_items.size(); i++) {
+            circle_items[i]->setData(1, i);
+        }
+        if (!circle_items.isEmpty()) {
+            circle_items.last()->seqNum = circle_items.last()->seqNum - 1;
+        }
+        if (circle_items.size() == 1) {
+            circle_items.last()->seqNum = 0;
+        }
+    }
+}
+
 void MainWindow::setItemRotate(int i)
 {
-    //删除选中的图元或者按ctrl键选择多个图元同时删除
     for (int n = 0; n < Items.size(); n++) {
         if (Items[n]->isSelected()) {
             Items[n]->setRotation(i);
@@ -261,12 +335,12 @@ void MainWindow::setLineWidth(int linewidth)
     for (int i = 0; i < Items.size(); i++) {
         if (Items[i]->isSelected()) {
             if (Items[i]->data(3) == QString("椭圆")) {
-                int item_index = Items[i]->data(1).toInt() - 1;
+                int item_index = Items[i]->data(1).toInt();
                 ellipse_items[item_index]->ellipse_pen.setWidth(linewidth);
                 ellipse_items[item_index]->update();
             }
             if (Items[i]->data(3) == QString("三角形")) {
-                int item_index = Items[i]->data(1).toInt() - 1;
+                int item_index = Items[i]->data(1).toInt();
                 triangle_items[item_index]->triangle_pen.setWidth(linewidth);
                 triangle_items[item_index]->update();
             }
@@ -278,7 +352,6 @@ void MainWindow::setLineWidth(int linewidth)
 
 void MainWindow:: triangleCellChange(int i, int j)
 {
-    qDebug() << "三角形" << i << j;
     if (triangle_table->item(i, j)->checkState() == Qt::Checked) {
         if(j == 0) {
             triangle_items[i]->hide();
@@ -327,7 +400,6 @@ void MainWindow:: circleCellChange(int i, int j)
 
 void MainWindow:: ellipseCellChange(int i, int j)
 {
-    qDebug() << "椭圆" << i << j;
     if (ellipse_table->item(i, j)->checkState() == Qt::Checked) {
         if(j == 0) {
             ellipse_items[i]->hide();

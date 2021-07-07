@@ -13,7 +13,7 @@ CircleItem::CircleItem(QGraphicsItem* parent)
     this->setRect(-50, -50, 100, 100);
     this->setZValue(++frontZ);
     this->setPos(-50 + (qrand() % 100), -50 + (qrand() % 100));
-    this->setData(CircleItemId, ++seqNum);
+    this->setData(CircleItemId, seqNum++);
     this->setData(CircleItemDesciption, "圆形");
     proxy = new QGraphicsProxyWidget();
     edit = new QLineEdit("直径(cm):");
@@ -49,7 +49,7 @@ void CircleItem::setZoomState(const int &zoomState)
 
 void CircleItem::titleValueChange(const QString &text)
 {
-    int item_index = this->data(1).toInt() - 1;
+    int item_index = this->data(1).toInt();
     QTableWidgetItem* item = new QTableWidgetItem();
     item->setText(text);
     parentWidget->setItem(item_index, 2, item);
@@ -57,7 +57,7 @@ void CircleItem::titleValueChange(const QString &text)
 
 void CircleItem::mapDataArea()
 {
-    int item_index = this->data(1).toInt() - 1;
+    int item_index = this->data(1).toInt();
     parentWidget->selectRow(item_index);
 }
 

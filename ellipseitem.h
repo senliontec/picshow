@@ -43,8 +43,8 @@ public:
     explicit EllipseItem(QGraphicsItem *parent = 0);
     ~EllipseItem();
 
-    QPen ellipse_pen;
     static int seqNum;
+    QPen ellipse_pen;
     QTableWidget* parentWidget;
     QGraphicsProxyWidget *long_proxy;
     QGraphicsProxyWidget* short_proxy;

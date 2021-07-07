@@ -16,7 +16,7 @@ EllipseItem::EllipseItem(QGraphicsItem *parent)
     this->setZValue(++frontZ);
     this->setPos(-50 + (qrand() % 100), -50 + (qrand() % 100));
     this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-    this->setData(EllipseItemId, ++seqNum);
+    this->setData(EllipseItemId, seqNum++);
     this->setData(EllipseItemDesciption, "椭圆");
     setRectSize(m_oldRect);
     setToolTip("Click and drag me!");
@@ -196,7 +196,7 @@ QPointF EllipseItem::getSmallRotateRectCenter(QPointF ptA, QPointF ptB)
 
 void EllipseItem::longAxiostitleValueChange(const QString &text)
 {
-    int item_index = this->data(1).toInt() - 1;
+    int item_index = this->data(1).toInt();
     QTableWidgetItem* item = new QTableWidgetItem();
     item->setText(text);
     parentWidget->setItem(item_index, 3, item);
@@ -204,7 +204,7 @@ void EllipseItem::longAxiostitleValueChange(const QString &text)
 
 void EllipseItem::shortAxiostitleValueChange(const QString &text)
 {
-    int item_index = this->data(1).toInt() - 1;
+    int item_index = this->data(1).toInt();
     QTableWidgetItem* item = new QTableWidgetItem();
     item->setText(text);
     parentWidget->setItem(item_index, 4, item);
@@ -212,7 +212,7 @@ void EllipseItem::shortAxiostitleValueChange(const QString &text)
 
 void EllipseItem::mapDataArea()
 {
-    int item_index = this->data(1).toInt() - 1;
+    int item_index = this->data(1).toInt();
     parentWidget->selectRow(item_index);
 }
 

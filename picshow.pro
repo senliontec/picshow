@@ -19,6 +19,7 @@ SOURCES += \
     baseitem.cpp \
     circleitem.cpp \
     ellipseitem.cpp \
+    lineitem.cpp \
     main.cpp \
     mainwindow.cpp \
     tabledata.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     baseitem.h \
     circleitem.h \
     ellipseitem.h \
+    lineitem.h \
     mainwindow.h \
     tabledata.h \
     triangleitem.h

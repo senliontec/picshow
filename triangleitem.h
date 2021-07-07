@@ -43,7 +43,7 @@ enum SHAPETYPE {
     TRIANGLE
 };
 
-class TriangleItem : public BaseItem, public QGraphicsPolygonItem
+class TriangleItem : public QObject, public QGraphicsPolygonItem
 {
     Q_OBJECT
 
@@ -51,6 +51,7 @@ public:
     explicit TriangleItem(QGraphicsItem *parent = 0);
     ~TriangleItem();
 
+    static int seqNum;
     QPen triangle_pen;
     SHAPETYPE ShapeType;
     QTableWidget* parentWidget;
@@ -60,7 +61,6 @@ public:
 
 private:
     int frontZ = 1;
-    static int seqNum;
     const int TriangleItemId = 1;
     const int TriangleItemDesciption = 3;
     int item_state;

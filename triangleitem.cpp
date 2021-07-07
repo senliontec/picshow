@@ -1,6 +1,5 @@
 #include "triangleitem.h"
 #include <QtMath>
-#include <QDebug>
 
 int TriangleItem::seqNum = 0;
 
@@ -16,7 +15,7 @@ TriangleItem::TriangleItem(QGraphicsItem *parent)
     this->setZValue(++frontZ);
     this->setPos(-50 + (qrand() % 100), -50 + (qrand() % 100));
     this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-    this->setData(TriangleItemId, ++seqNum);
+    this->setData(TriangleItemId, seqNum++);
     this->setData(TriangleItemDesciption, "三角形");
     setRectSize(update_rect);
     setToolTip("Click and drag me!");
@@ -67,8 +66,6 @@ void TriangleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 void TriangleItem::setRectSize(QRectF rect, bool isreset_rotate_center)
 {
     update_rect = rect;
-    qDebug() << "rectr" << rect;
-    qDebug() << "update_rect" << update_rect;
     if(isreset_rotate_center) {
         rotate_center.setX(update_rect.x() + update_rect.width() / 2);
         rotate_center.setY(update_rect.y() + update_rect.width() * (sqrt(3) / 3));
@@ -146,7 +143,6 @@ QRectF TriangleItem::getRotateCircleRect(QPointF ptA, QPointF ptB)
 
 QPointF TriangleItem::getRotateCircleRectCenter(QPointF ptA, QPointF ptB)
 {
-    qDebug() << ptA.y() << ptB.y();
     QPointF ptCenter = QPointF((ptA.x() + ptB.x()) / 2, (ptA.y() + ptB.y()) / 2); //A,B点的中点C
     //中垂线方程式为 y=x*k + b;
     qreal x, y; //旋转图标矩形的中心
@@ -189,13 +185,13 @@ void TriangleItem::setZoomState(const int &itemstate)
 
 void TriangleItem::mapDataArea()
 {
-    int item_index = this->data(1).toInt() - 1;
+    int item_index = this->data(1).toInt();
     parentWidget->selectRow(item_index);
 }
 
 void TriangleItem::titleValueChange(const QString &text)
 {
-    int item_index = this->data(1).toInt() - 1;
+    int item_index = this->data(1).toInt();
     QTableWidgetItem* item = new QTableWidgetItem();
     item->setText(text);
     parentWidget->setItem(item_index, 2, item);
@@ -207,7 +203,6 @@ void TriangleItem ::mousePressEvent(QGraphicsSceneMouseEvent *event)
         this->scene()->clearSelection();
         mapDataArea();
         cur_mouse_pos = event->pos();
-        qDebug() << cur_mouse_pos;
         if(rotate_circle_polygon.containsPoint(cur_mouse_pos, Qt::WindingFill)) {
             setCursor(Qt::PointingHandCursor);
             stateFlag = ROTATE;

@@ -22,6 +22,7 @@ class CircleItem :  public QObject, public QGraphicsEllipseItem
 public:
     explicit CircleItem(QGraphicsItem *parent = 0);
 
+    static int seqNum;
     QGraphicsTextItem* textItem;
     QTableWidget* parentWidget;
     QLineEdit* edit;
@@ -30,12 +31,9 @@ public:
     QTableWidgetItem *rect_checkBox;
 
 private:
-    static int seqNum;
-
     int frontZ = 1;
     const int CircleItemId = 1;
     const int CircleItemDesciption = 3;
-
 
     QColor c;
     QPointF m_centerPointF;

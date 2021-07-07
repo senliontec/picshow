@@ -3,6 +3,8 @@
 tableData::tableData()
     : QTableWidget()
 {
+    this->resizeColumnsToContents();
+    this->resizeRowsToContents();
 }
 
 tableData::~tableData()

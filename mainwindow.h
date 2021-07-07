@@ -6,11 +6,12 @@
 #include "triangleitem.h"
 #include "tabledata.h"
 
-#include <QMainWindow>
 #include <QCheckBox>
-#include <QToolBox>
-#include <QMouseEvent>
 #include <QFileDialog>
+#include <QMainWindow>
+#include <QMap>
+#include <QMouseEvent>
+#include <QToolBox>
 #include <QImage>
 #include <QPixmap>
 #include <QLabel>
@@ -27,7 +28,6 @@
 #include <QTableWidgetItem>
 #include <QSpinBox>
 #include <QPainter>
-#include <QMouseEvent>
 #include <QDialog>
 #include <QFormLayout>
 #include <QVBoxLayout>
@@ -55,7 +55,7 @@ private:
     tableData* line_table;
     QGraphicsScene  *scene;
     QImage *image;
-    QInputDialog* getChNo;
+    QInputDialog* linewidth_dialog;
     QList<QAbstractGraphicsShapeItem *> Items;
     QList<QGraphicsPixmapItem *> imageItem;
     QList<TriangleItem *>triangle_items;
@@ -66,6 +66,7 @@ private:
 
     void clearItems();
     void initDataUi();
+    void updateItemIndex(QString item_name);
 
 private slots:
     void on_actOpenPic_triggered();
