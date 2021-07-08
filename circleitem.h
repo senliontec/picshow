@@ -29,6 +29,7 @@ public:
     QGraphicsProxyWidget* proxy;
     QTableWidgetItem *title_checkBox;
     QTableWidgetItem *rect_checkBox;
+    void setItemPenStyle(QPen pen);
 
 private:
     int frontZ = 1;

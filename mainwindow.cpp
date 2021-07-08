@@ -20,12 +20,24 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);  // 抗锯齿
     image = new QImage();
     showMaximized();
-    linewidth_dialog = new QInputDialog(this);
-    connect(linewidth_dialog, SIGNAL(intValueChanged(int)), this, SLOT(setLineWidth(int)));
+    linecombox = new QComboBox();
+    linewidthbox = new QSpinBox();
+    dialogbtnbox = new QDialogButtonBox(QDialogButtonBox::Ok
+                                        | QDialogButtonBox::Cancel);
+    linecombox->addItem("solidline");
+    linecombox->addItem("dashline");
+    linecombox->addItem("dotline");
+    linecombox->addItem("dashdotline");
+    linecombox->addItem("dashdotdotline");
+    linecombox->addItem("customdashline");
     connect(triangle_table, SIGNAL(cellChanged(int, int)), this, SLOT(triangleCellChange(int, int)));
     connect(circle_table, SIGNAL(cellChanged(int, int)), this, SLOT(circleCellChange(int, int)));
     connect(ellipse_table, SIGNAL(cellChanged(int, int)), this, SLOT(ellipseCellChange(int, int)));
     connect(ui->toolBox, SIGNAL(currentChanged(int)), this, SLOT(toolBoxClickedChange(int)));
+    connect(linewidthbox, SIGNAL(valueChanged(int)), this, SLOT(setLineWidth(int)));
+    connect(linecombox, SIGNAL(activated(int)), this, SLOT(setLineStyle(int)));
+    connect(dialogbtnbox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(dialogbtnbox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 MainWindow::~MainWindow()
@@ -35,6 +47,7 @@ MainWindow::~MainWindow()
         delete scene;
     }
     delete ui;
+    delete linedialog;
 }
 
 void MainWindow::on_actOpenPic_triggered()
@@ -80,7 +93,6 @@ void MainWindow::on_actItem_triangle_triggered()
     triangleitem->proxy->setParentItem(triangleitem);
     int rowcount = triangle_table->rowCount();
     triangle_table->insertRow(rowcount);
-    int rowcounts = triangle_table->rowCount();
     QTableWidgetItem *title_checkBox = new QTableWidgetItem();
     QTableWidgetItem *rect_checkBox = new QTableWidgetItem();
     title_checkBox->setCheckState(Qt::Unchecked);
@@ -177,11 +189,8 @@ void MainWindow::on_actEdit_Delete_triggered()
 
 void MainWindow::on_actLine_Width_triggered()
 {
-    linewidth_dialog->setOkButtonText(QString("确定"));
-    linewidth_dialog->setCancelButtonText(QString("取消"));
-    linewidth_dialog->setInputMode(QInputDialog::IntInput);
-    linewidth_dialog->setLabelText("设置线宽");
-    linewidth_dialog->show();
+    // 线条设置
+    setLineUi();
 }
 
 void MainWindow::on_actClear_Screen_triggered()
@@ -209,6 +218,7 @@ void MainWindow::on_actEdit_Color_triggered()
                 triangle_items[item_index]->update();
             }
             pen.setWidth(Items[i]->pen().width());
+            pen.setStyle(Items[i]->pen().style());
             Items[i]->setPen(pen);
         }
     }
@@ -223,7 +233,106 @@ void MainWindow::on_actReset_Item_triggered()
 
 void MainWindow::on_actQuit_triggered()
 {
-    this->close();
+    delete this;
+}
+
+void MainWindow::setLineStyle(int index)
+{
+    QPen pen;
+    switch (index) {
+        case 0: {
+            pen.setStyle(Qt::SolidLine);
+            break;
+        }
+        case 1:
+            pen.setStyle(Qt::DashLine);
+            break;
+        case 2:
+            pen.setStyle(Qt::DotLine);
+            break;
+        case 3:
+            pen.setStyle(Qt::DashDotLine);
+            break;
+        case 4:
+            pen.setStyle(Qt::DashDotDotLine);
+            break;
+        case 5:
+            pen.setStyle(Qt::CustomDashLine);
+            break;
+        default:
+            pen.setStyle(Qt::SolidLine);
+    }
+    for (int i = 0; i < Items.size(); i++) {
+        if (Items[i]->isSelected()) {
+            if (Items[i]->data(3) == QString("椭圆")) {
+                int item_index = Items[i]->data(1).toInt();
+                updateLineStyle(0, item_index, index);
+                ellipse_items[item_index]->update();
+            }
+            if (Items[i]->data(3) == QString("三角形")) {
+                int item_index = Items[i]->data(1).toInt();
+                updateLineStyle(1, item_index, index);
+                triangle_items[item_index]->update();
+            }
+            pen.setWidth(Items[i]->pen().width());
+            pen.setColor(Items[i]->pen().color());
+            Items[i]->setPen(pen);
+        }
+    }
+}
+
+void MainWindow::updateLineStyle(bool iswho, int item_index, int index)
+{
+    switch (index) {
+        case 0: {
+            if (iswho) {
+                triangle_items[item_index]->triangle_pen.setStyle(Qt::SolidLine);
+            } else {
+                ellipse_items[item_index]->ellipse_pen.setStyle(Qt::SolidLine);
+            }
+            break;
+        }
+        case 1: {
+            if (iswho) {
+                triangle_items[item_index]->triangle_pen.setStyle(Qt::DashLine);
+            } else {
+                ellipse_items[item_index]->ellipse_pen.setStyle(Qt::DashLine);
+            }
+            break;
+        }
+        case 2: {
+            if (iswho) {
+                triangle_items[item_index]->triangle_pen.setStyle(Qt::DotLine);
+            } else {
+                ellipse_items[item_index]->ellipse_pen.setStyle(Qt::DotLine);
+            }
+            break;
+        }
+        case 3: {
+            if (iswho) {
+                triangle_items[item_index]->triangle_pen.setStyle(Qt::DashDotLine);
+            } else {
+                ellipse_items[item_index]->ellipse_pen.setStyle(Qt::DashDotLine);
+            }
+            break;
+        }
+        case 4: {
+            if (iswho) {
+                triangle_items[item_index]->triangle_pen.setStyle(Qt::DashDotDotLine);
+            } else {
+                ellipse_items[item_index]->ellipse_pen.setStyle(Qt::DashDotDotLine);
+            }
+            break;
+        }
+        case 5: {
+            if (iswho) {
+                triangle_items[item_index]->triangle_pen.setStyle(Qt::CustomDashLine);
+            } else {
+                ellipse_items[item_index]->ellipse_pen.setStyle(Qt::CustomDashLine);
+            }
+            break;
+        }
+    }
 }
 
 void MainWindow::initDataUi()
@@ -257,6 +366,20 @@ void MainWindow::initDataUi()
     ui->circle_h_layout->addWidget(circle_table);
     ui->ellipse_h_layout->addWidget(ellipse_table);
     ui->line_h_layout->addWidget(line_table);
+}
+
+void MainWindow::setLineUi()
+{
+    QFormLayout* flayout = new QFormLayout;
+    QVBoxLayout* vlayout = new QVBoxLayout;
+    linedialog = new QDialog();
+    linedialog->setWindowTitle("线条设置");
+    flayout->addRow("线宽", linewidthbox);
+    flayout->addRow("样式", linecombox);
+    vlayout->addLayout(flayout);
+    vlayout->addWidget(dialogbtnbox);
+    linedialog->setLayout(vlayout);
+    linedialog->open();
 }
 
 void MainWindow::clearItems()
@@ -353,9 +476,20 @@ void MainWindow::setLineWidth(int linewidth)
                 triangle_items[item_index]->update();
             }
             pen.setColor(Items[i]->pen().color());
+            pen.setStyle(Items[i]->pen().style());
             Items[i]->setPen(pen);
         }
     }
+}
+
+void MainWindow::accept()
+{
+    linedialog->hide();
+}
+
+void MainWindow::reject()
+{
+    linedialog->hide();
 }
 
 void MainWindow::toolBoxClickedChange(int index)

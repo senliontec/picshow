@@ -37,6 +37,11 @@ CircleItem::CircleItem(QGraphicsItem* parent)
     connect(edit, SIGNAL(textChanged(const QString)), this, SLOT(titleValueChange(const QString)));
 }
 
+void CircleItem::setItemPenStyle(QPen pen)
+{
+    this->setPen(pen);
+}
+
 void CircleItem::setZoomState(const int &zoomState)
 {
     m_zoomState = zoomState;
@@ -66,7 +71,6 @@ void CircleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         mapDataArea();
         if (event->modifiers() == Qt::AltModifier) {
-            // 重置 item 大小
             double radius = boundingRect().width() / 2.0;
             QPointF topLeft = boundingRect().topLeft();
             m_centerPointF = QPointF(topLeft.x() + pos().x() + radius, topLeft.y() + pos().y() + radius);

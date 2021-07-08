@@ -390,7 +390,10 @@
      <normaloff>:/images/images/Linde_widget.png</normaloff>:/images/images/Linde_widget.png</iconset>
    </property>
    <property name="text">
-    <string>设置线宽</string>
+    <string>线条设置</string>
+   </property>
+   <property name="toolTip">
+    <string>线条设置</string>
    </property>
   </action>
   <action name="actReset_Item">

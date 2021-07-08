@@ -7,31 +7,34 @@
 #include "lineitem.h"
 #include "tabledata.h"
 
+#include <QAbstractGraphicsShapeItem>
+#include <QAction>
 #include <QCheckBox>
+#include <QColorDialog>
+#include <QComboBox>
+#include <QDialogButtonBox>
 #include <QFileDialog>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsTextItem>
 #include <QMainWindow>
-#include <QMap>
 #include <QMouseEvent>
 #include <QToolBox>
 #include <QImage>
+#include <QPainter>
+#include <QPen>
 #include <QPixmap>
 #include <QLabel>
-#include <QGraphicsScene>
-#include <QColorDialog>
-#include <QPen>
-#include <QAbstractGraphicsShapeItem>
-#include <QGraphicsProxyWidget>
-#include <QGraphicsTextItem>
-#include <QGraphicsLineItem>
-#include <QGraphicsEllipseItem>
-#include <QGraphicsSceneMouseEvent>
 #include <QLineEdit>
 #include <QTableWidgetItem>
 #include <QSpinBox>
-#include <QPainter>
 #include <QDialog>
 #include <QFormLayout>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QInputDialog>
 
 QT_BEGIN_NAMESPACE
@@ -54,9 +57,12 @@ private:
     tableData* circle_table;
     tableData* ellipse_table;
     tableData* line_table;
+
+    QComboBox* linecombox;
+    QDialog* linedialog;
+    QDialogButtonBox* dialogbtnbox;
     QGraphicsScene  *scene;
     QImage *image;
-    QInputDialog* linewidth_dialog;
     QList<QAbstractGraphicsShapeItem *> Items;
     QList<QGraphicsPixmapItem *> imageItem;
     QList<TriangleItem *>triangle_items;
@@ -64,11 +70,13 @@ private:
     QList<EllipseItem *>ellipse_items;
     QList<LineItem *> line_items;
     QLabel *picshow;
-    QSpinBox* linespinbox;
+    QSpinBox* linewidthbox;
 
     void clearItems();
     void initDataUi();
     void updateItemIndex(QString item_name);
+    void setLineUi();
+    void updateLineStyle(bool iswho, int item_index, int index);
 
 private slots:
     void on_actOpenPic_triggered();
@@ -93,6 +101,8 @@ private slots:
 
     void on_actLine_Width_triggered();
 
+    void setLineStyle(int index);
+
     void setItemRotate(int i);
 
     void setLineWidth(int i);
@@ -104,6 +114,10 @@ private slots:
     void ellipseCellChange(int i, int j);
 
     void toolBoxClickedChange(int index);
+
+    void accept();
+
+    void reject();
 
 private:
     Ui::MainWindow *ui;
