@@ -48,7 +48,6 @@ void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     Q_UNUSED(option);
     Q_UNUSED(widget);
     if(m_ShapeType == CIRCLE) {
-        ellipse_pen.setStyle(Qt::SolidLine);
         painter->setPen(ellipse_pen);
         QTransform trans;
         QPainterPath path;
@@ -56,10 +55,10 @@ void EllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         trans.rotate(m_RotateAngle, Qt::ZAxis);
         trans.translate(-m_RotateCenter.x(), -m_RotateCenter.y());
         path.addEllipse(m_oldRect);
-        path = trans.map(path);  // 将pathTemp旋转m_RotateAngle角度
-        painter->drawPath(path);  // drawPolygon(m_oldRectPolygon);
+        path = trans.map(path);
+        painter->drawPath(path);
         //绘制旋转圆形标记
-        painter->setPen(QPen(Qt::green));
+        painter->setPen(QPen(Qt::green, Qt::SolidLine));
         QPointF pf = getSmallRotateRectCenter(m_oldRectPolygon[0], m_oldRectPolygon[1]);
         QRectF rect = QRectF(pf.x() - 10, pf.y() - 10, 20, 20);
         painter->drawEllipse(rect);

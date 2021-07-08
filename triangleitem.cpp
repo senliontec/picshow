@@ -48,14 +48,13 @@ void TriangleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         QPainterPath path;
         QPainterPath circle_path;
         path.addPolygon(update_rect_polygon);
-        triangle_pen.setStyle(Qt::SolidLine);
         painter->setPen(triangle_pen);
         painter->drawPath(path);
         //绘制旋转中心点
-        painter->setPen(QPen(Qt::red));
+        painter->setPen(QPen(Qt::red, Qt::SolidLine));
         painter->drawPoint(rotate_center.x(), rotate_center.y());
         //绘制旋转圆形标记
-        painter->setPen(QPen(Qt::green));
+        painter->setPen(QPen(Qt::green, Qt::SolidLine));
         QPointF pf = getRotateCircleRectCenter(update_rect_polygon[1], update_rect_polygon[2]);
         QRectF rect = QRectF(pf.x() - 10, pf.y() - 10, 20, 20);
         painter->drawEllipse(rect);

@@ -4,8 +4,11 @@
 #include "baseitem.h"
 #include "math.h"
 
+#include <QCursor>
 #include <QGraphicsPolygonItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
+#include <QMatrix>
 #include <QPainter>
 #include <QPen>
 #include <QPolygon>
@@ -22,6 +25,7 @@ private:
     QPen line_pen;
     QPointF pf_start;
     QPointF pf_end;
+    QPointF lastPointF;
     QRectF  boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void setLine(QPointF pfA, QPointF pfB);
