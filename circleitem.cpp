@@ -19,7 +19,7 @@ CircleItem::CircleItem(QGraphicsItem* parent)
     edit = new QLineEdit("直径(cm):");
     edit->setFixedWidth(100);
     proxy->setWidget(edit);
-    proxy->setPos(-50, -70);
+    proxy->setPos(-50, -80);
     proxy->setParentItem(this);
     QGraphicsEllipseItem* pointItem = new QGraphicsEllipseItem();
     pointItem->setFlag(QGraphicsItem::ItemIgnoresTransformations);
